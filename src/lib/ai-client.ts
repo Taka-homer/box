@@ -9,6 +9,7 @@ import {
 } from "./ai-search-types";
 import type { Item } from "./types";
 import { AppError } from "./types";
+import { getAccessToken } from "./cloud/client";
 
 export async function fetchAiStatus(): Promise<boolean> {
   try {
@@ -33,10 +34,11 @@ export function toCandidates(items: Item[]): AiCandidate[] {
 
 export async function aiSearch(query: string, items: Item[], signal?: AbortSignal): Promise<AiSearchMatch[]> {
   let res: Response;
+  const token = await getAccessToken().catch(() => null);
   try {
     res = await fetch("/api/ai-search", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: { "Content-Type": "application/json", ...(token ? { Authorization: `Bearer ${token}` } : {}) },
       body: JSON.stringify({ query, candidates: toCandidates(items) }),
       signal,
     });

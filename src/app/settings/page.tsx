@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useData } from "@/components/data-provider";
 import { ConfirmDialog } from "@/components/dialog";
+import { FamilySection } from "@/components/family-section";
 import { DocIcon, DownloadIcon, SparkIcon, UploadIcon } from "@/components/icons";
 import { Button, Card, LinkButton, Notice, PageHeader, SectionTitle } from "@/components/ui";
 import { fetchAiStatus } from "@/lib/ai-client";
@@ -15,7 +16,8 @@ import { errorMessage, type Snapshot } from "@/lib/types";
 type Msg = { kind: "success" | "error"; text: string } | null;
 
 export default function SettingsPage() {
-  const { data, repo, refresh, status } = useData();
+  const { data, repo, refresh, status, access } = useData();
+  const cloud = access.mode === "cloud" && access.phase === "ready" ? access.membership : null;
   const [aiAvailable, setAiAvailable] = useState<boolean | null>(null);
   const [backupMsg, setBackupMsg] = useState<Msg>(null);
   const [demoMsg, setDemoMsg] = useState<Msg>(null);
@@ -106,21 +108,40 @@ export default function SettingsPage() {
     <div className="mx-auto flex max-w-2xl flex-col gap-6">
       <PageHeader title="設定" back={{ href: "/", label: "ホーム" }} />
 
+      {cloud && <FamilySection membership={cloud} />}
+
       <section aria-labelledby="storage-title">
         <SectionTitle>
           <span id="storage-title">データの保存について</span>
         </SectionTitle>
         <Card className="flex flex-col gap-2 text-[15px]">
-          <p>
-            登録したデータと写真は、<strong className="font-medium text-ink">この端末のこのブラウザの中</strong>
-            に保存されます。インターネット上には保存されません。
-          </p>
-          <ul className="list-disc space-y-1 pl-5 text-[14px]">
-            <li>ブラウザの履歴やサイトデータを削除すると、登録内容も消えます。</li>
-            <li>別の端末や別のブラウザとは共有されません。</li>
-            <li>プライベートブラウズでは、閉じると消える場合があります。</li>
-            <li>写真は {IMAGE_HELP_TEXT}</li>
-          </ul>
+          {cloud ? (
+            <>
+              <p>
+                登録したデータと写真は、<strong className="font-medium text-ink">家族だけが見られるクラウド（Supabase）</strong>
+                に保存され、招待した家族のスマホと共有されます。
+              </p>
+              <ul className="list-disc space-y-1 pl-5 text-[14px]">
+                <li>家族のだれかが登録・移動すると、ほかの人の画面にもすぐ反映されます。</li>
+                <li>使うにはインターネット接続が必要です。</li>
+                <li>この端末のブラウザのデータを消しても、家族のデータは消えません（もう一度招待を受ければ見られます）。</li>
+                <li>写真は {IMAGE_HELP_TEXT}</li>
+              </ul>
+            </>
+          ) : (
+            <>
+              <p>
+                登録したデータと写真は、<strong className="font-medium text-ink">この端末のこのブラウザの中</strong>
+                に保存されます。インターネット上には保存されません。
+              </p>
+              <ul className="list-disc space-y-1 pl-5 text-[14px]">
+                <li>ブラウザの履歴やサイトデータを削除すると、登録内容も消えます。</li>
+                <li>別の端末や別のブラウザとは共有されません。</li>
+                <li>プライベートブラウズでは、閉じると消える場合があります。</li>
+                <li>写真は {IMAGE_HELP_TEXT}</li>
+              </ul>
+            </>
+          )}
           <p className="text-[14px] text-muted">
             大切なデータは、下の「バックアップ」で定期的にファイルに保存してください。
           </p>
@@ -162,7 +183,9 @@ export default function SettingsPage() {
             </Button>
           </div>
           <p id="backup-help" className="text-[13px] text-muted">
-            復元すると、今このブラウザにあるデータはすべて置き換わります。読み込む前に確認画面を表示します。
+            {cloud
+              ? "復元すると、家族全員が見ているデータがすべて置き換わります。読み込む前に確認画面を表示します。"
+              : "復元すると、今このブラウザにあるデータはすべて置き換わります。読み込む前に確認画面を表示します。"}
           </p>
         </Card>
       </section>
@@ -236,7 +259,9 @@ export default function SettingsPage() {
           </p>
           <p className="text-[14px] text-muted">
             AI検索を使うときだけ、登録物の名前・カテゴリ・詳しい位置・メモを外部のAIに送信します。写真は送信しません。
-            AI検索を使わない限り、データが外部に送信されることはありません。
+            {cloud
+              ? "AI検索を使わない限り、家族のクラウド以外にデータが送信されることはありません。"
+              : "AI検索を使わない限り、データが外部に送信されることはありません。"}
           </p>
         </Card>
       </section>
@@ -252,7 +277,10 @@ export default function SettingsPage() {
             <div className="flex flex-col gap-2">
               <p>
                 「{pending.fileName}」の内容で、
-                <strong className="font-medium text-danger">現在のデータをすべて置き換えます</strong>。元に戻せません。
+                <strong className="font-medium text-danger">
+                  {cloud ? "家族全員の現在のデータをすべて置き換えます" : "現在のデータをすべて置き換えます"}
+                </strong>
+                。元に戻せません。
               </p>
               <ul className="rounded-xl bg-brand-softer px-4 py-3 text-[14px]">
                 <li>書き出し日時：{formatDateTime(pending.summary.exportedAt)}</li>

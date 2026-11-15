@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import { DataProvider } from "@/components/data-provider";
 import { AppShell } from "@/components/app-shell";
+import { AccessGate } from "@/components/access-gate";
 
 export const metadata: Metadata = {
   title: "わが家の収納",
@@ -19,7 +20,9 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
     <html lang="ja">
       <body className="min-h-dvh antialiased">
         <DataProvider>
-          <AppShell>{children}</AppShell>
+          <AppShell>
+            <AccessGate>{children}</AccessGate>
+          </AppShell>
         </DataProvider>
       </body>
     </html>

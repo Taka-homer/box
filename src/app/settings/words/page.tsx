@@ -57,7 +57,7 @@ function WordChips({ words }: { words: string[] }) {
 }
 
 function MyWords() {
-  const { status, data, repo, refresh } = useData();
+  const { status, data, repo, refresh, access } = useData();
   const params = useSearchParams();
   const [text, setText] = useState(() => params.get("add") ?? "");
   const [error, setError] = useState<string | null>(null);
@@ -171,7 +171,9 @@ function MyWords() {
       </section>
 
       <Notice kind="info">
-        マイ辞書はこの端末のブラウザに保存され、バックアップにも含まれます。外部には送信しません。
+        {access.mode === "cloud"
+          ? "マイ辞書は家族で共有され、だれが登録しても全員の検索に使われます。バックアップにも含まれます。"
+          : "マイ辞書はこの端末のブラウザに保存され、バックアップにも含まれます。外部には送信しません。"}
       </Notice>
 
       {editing && (

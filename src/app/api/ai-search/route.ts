@@ -2,6 +2,7 @@ import { getAiSearchAdapter } from "@/server/ai-search";
 import { handleAiSearch, MAX_BODY_BYTES } from "@/server/ai-search/handle";
 import type { AiStatusResponse } from "@/lib/ai-search-types";
 import { connection } from "next/server";
+import { isAuthorized } from "@/server/auth";
 
 /** AI検索が使えるかどうかだけを返す（キーなどの設定内容は返さない） */
 export async function GET() {
@@ -12,6 +13,9 @@ export async function GET() {
 }
 
 export async function POST(request: Request) {
+  if (!(await isAuthorized(request))) {
+    return Response.json({ ok: false, error: "家族のメンバーだけが使えます。" }, { status: 401 });
+  }
   const length = Number(request.headers.get("content-length") ?? "0");
   if (length > MAX_BODY_BYTES) {
     return Response.json({ ok: false, error: "登録数が多すぎるため、AI検索を利用できません。" }, { status: 413 });

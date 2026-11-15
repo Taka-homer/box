@@ -4,7 +4,6 @@ import { openDB, type DBSchema, type IDBPDatabase, type IDBPTransaction, type St
 import type { CreateOptions, Repository } from "./repository";
 import {
   AppError,
-  CATEGORIES,
   type AppData,
   type Floor,
   type Item,
@@ -18,13 +17,10 @@ import {
   type WordGroup,
 } from "./types";
 import { cleanWordGroup, sameWordSet } from "./my-words";
-import { cleanName, newId, sameName } from "./text";
+import { newId, sameName } from "./text";
+import { LIMITS, optionalText, requireName, validateItem } from "./validation";
 
-export const LIMITS = {
-  name: 60,
-  detail: 200,
-  memo: 1000,
-} as const;
+export { LIMITS } from "./validation";
 
 interface WagayaDB extends DBSchema {
   floors: { key: string; value: Floor };
@@ -45,19 +41,6 @@ export const DB_VERSION = 2;
 
 function now() {
   return new Date().toISOString();
-}
-
-function requireName(value: string, label: string): string {
-  const name = cleanName(value);
-  if (!name) throw new AppError(`${label}を入力してください。`);
-  if (name.length > LIMITS.name) throw new AppError(`${label}は${LIMITS.name}文字以内で入力してください。`);
-  return name;
-}
-
-function optionalText(value: string, label: string, max: number): string {
-  const text = value.trim();
-  if (text.length > max) throw new AppError(`${label}は${max}文字以内で入力してください。`);
-  return text;
 }
 
 async function preparePhoto(change: PhotoChange | undefined): Promise<PhotoRecord | null> {
@@ -368,21 +351,8 @@ export class IndexedDbRepository implements Repository {
 
   // ---- もの・書類 ----
 
-  private validateItem(input: ItemInput): ItemInput {
-    const name = requireName(input.name, "名前");
-    if (!CATEGORIES.includes(input.category)) throw new AppError("カテゴリを選んでください。");
-    if (!input.storageId) throw new AppError("収納場所を選んでください。");
-    return {
-      name,
-      category: input.category,
-      storageId: input.storageId,
-      detail: optionalText(input.detail, "詳しい位置", LIMITS.detail),
-      memo: optionalText(input.memo, "メモ", LIMITS.memo),
-    };
-  }
-
   async addItem(inputValue: ItemInput, photo?: PhotoChange, options?: CreateOptions): Promise<Item> {
-    const input = this.validateItem(inputValue);
+    const input = validateItem(inputValue);
     const prepared = await preparePhoto(photo);
     const tx = await this.tx();
     if (!(await tx.objectStore("storages").get(input.storageId))) {
@@ -405,7 +375,7 @@ export class IndexedDbRepository implements Repository {
   }
 
   async updateItem(id: string, inputValue: ItemInput, photo: PhotoChange): Promise<void> {
-    const input = this.validateItem(inputValue);
+    const input = validateItem(inputValue);
     const prepared = await preparePhoto(photo);
     const tx = await this.tx();
     const item = await tx.objectStore("items").get(id);
