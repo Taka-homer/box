@@ -1,36 +1,136 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# わが家の収納
 
-## Getting Started
+戸建て住宅で「ものや書類をどこにしまったか」を記録し、名前・特徴・場所からすぐ探せるようにする個人向けWebアプリです。
+スマートフォンでの利用を最優先にしたレスポンシブ設計です。
 
-First, run the development server:
+## 起動方法
+
+Node.js 20.9 以上が必要です（動作確認は Node.js 24）。
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+npm run dev          # 開発用: http://localhost:3000
+# または
+npm run build && npm start   # 本番モード
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+同じWi-Fiのスマートフォンから試す場合は、PCのIPアドレス（例: `http://192.168.x.x:3000`）を開きます。
+データはアクセスしたブラウザごとに保存されるため、PCとスマートフォンのデータは別々です。
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## チェック・テスト
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm run typecheck   # 型チェック
+npm run lint        # ESLint
+npm test            # Vitest（保存・検索・参照関係・バックアップ・AI検索の検証）
+npm run build       # 本番ビルド
+```
 
-## Learn More
+## 画面
 
-To learn more about Next.js, take a look at the following resources:
+| パス | 内容 |
+| --- | --- |
+| `/` | ホーム（検索、メニュー、最近の登録、初回案内） |
+| `/items` | 探す・一覧（通常検索・絞り込み・AI検索） `?category=書類` `?view=recent` などに対応 |
+| `/items/new` | ものの登録（`?storage=ID` で収納場所を選択済みにできる） |
+| `/items/[id]` | ものの詳細（見つかった／置き場所を変更／見つからない／編集／削除） |
+| `/places` | 収納場所一覧（階で絞り込み、部屋ごとにまとめて表示） |
+| `/places/[id]` | 収納場所の詳細（ここにあるもの、編集、削除） |
+| `/places/structure` | 階と部屋の追加・名前変更・並べ替え・削除 |
+| `/settings` | 保存についての説明、バックアップ、見本データ、AI検索の状態 |
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 構成
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```
+src/
+  lib/
+    types.ts            データ型（階・部屋・収納場所・もの・写真）
+    repository.ts       保存処理のインターフェース（画面はこれだけに依存）
+    idb-repository.ts   IndexedDB による実装
+    search.ts           通常検索（キーワード＋絞り込み）
+    backup.ts           バックアップの書き出し・検証・読み込み
+    demo.ts             見本データ
+    image.ts            写真の検証・縮小・圧縮
+    ai-client.ts        AI検索のブラウザ側呼び出し
+    ai-search-types.ts  AI検索の送受信データと ID 検証
+  server/ai-search/     AI検索のサーバー側アダプター
+  app/                  画面と API（/api/ai-search）
+  components/           共通部品
+tests/                  Vitest のテスト
+```
 
-## Deploy on Vercel
+### データと保存
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- データはブラウザの IndexedDB（`wagaya-shuno`）に保存します。localStorage は使いません。
+- ものは収納場所IDだけを持ち、階・部屋は収納場所からたどります。名前変更・移動はすべてのものに自動で反映されます。
+- 写真は「ものの写真」と「収納場所の写真」を別々に保存します。収納場所の写真は1枚をその場所のすべてのもので共用します。
+- 写真は長辺 1600px の JPEG に縮小・圧縮して保存します（対応形式: JPEG・PNG・WebP、20MBまで）。
+- 将来サーバー保存へ移行する場合は、`Repository` インターフェースを実装したクラスを作り、
+  `src/components/data-provider.tsx` で差し替えます。
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### バックアップ形式
+
+```json
+{ "format": "wagaya-shuno-backup", "version": 2, "exportedAt": "...",
+  "data": { "floors": [], "rooms": [], "storages": [], "items": [], "photos": [{ "id": "", "type": "image/jpeg", "data": "<base64>" }], "words": [{ "id": "", "words": ["ボイラー室", "機械室"] }] } }
+```
+
+読み込み時に形式・バージョン・ID の重複・参照関係（部屋→階、収納場所→部屋、もの→収納場所、写真）を検証し、
+問題があれば現在のデータを変更せずにエラーを表示します。
+
+## 関連語検索（無料・AIなし）
+
+通常検索では、入力した言葉そのものを含むものに加えて、**関連語辞書**（`src/lib/related-words.ts`）で
+言葉を広げた結果を「関連する言葉で見つかったもの」として下に表示します。外部への送信や費用はありません。
+
+- 例：「冷房の修理に必要な書類」→ エアコンの保証書・取扱説明書 ／「年末に飾るもの」→ クリスマス飾り
+- 辞書は2種類あります。
+  - `SYNONYMS`（言い換え・双方向）：「マニュアル」⇔「取扱説明書」
+  - `RELATED`（関連・一方向）：「修理」→「保証書」。逆向きには広げないので、結果が広がりすぎません。
+- 文章で入力すると、辞書の言葉を取り出し（冷房／修理／書類）、半分以上の言葉に関連するものを、関係が深い順に表示します。
+- 関連語の照合では、名前・詳しい位置・メモに加えてカテゴリ名も使います。
+- 内蔵の辞書に言葉を足したい場合は `src/lib/related-words.ts` の配列に追記します。
+
+### マイ辞書
+
+設定 →「マイ辞書」（`/settings/words`）で、家族独自の呼び方を「同じ意味の言葉の組」として登録できます
+（例：ボイラー室、機械室）。登録した言葉は言い換え（双方向）として内蔵の辞書に加わります。
+
+- 保存先は IndexedDB の `words`（データベース版2で追加。版1のデータはそのまま引き継ぎます）
+- 1組 2〜10語、1語30文字まで。同じ組み合わせは重複登録できません
+- バックアップに含まれます（バックアップ形式 版2。マイ辞書のない版1のファイルも読み込めます）
+- 検索で見つからなかったときの案内から、検索した言葉を入れた状態で登録画面を開けます
+
+## AI検索の設定
+
+通常検索とAI検索は別の処理です。AI検索が未設定でも、通常検索ですべての機能を使えます。
+未設定のときは検索欄に「通常検索」と表示し、AI検索の切り替えは表示しません。
+
+### 有効にする方法
+
+1. `.env.example` を `.env.local` にコピーする
+2. 次の値を設定する（Anthropic の API キーが必要です。利用料金が発生します）
+   ```
+   AI_SEARCH_PROVIDER=anthropic
+   ANTHROPIC_API_KEY=sk-ant-...
+   # AI_SEARCH_MODEL=claude-opus-5-5   （任意）
+   ```
+3. サーバーを再起動する
+
+### 仕組みと送信される情報
+
+- ブラウザ → `POST /api/ai-search` → サーバーのアダプター → 外部AI
+- 送信するのは、登録物の **ID・名前・カテゴリ・詳しい位置・メモ** と検索文だけです。**写真と場所の名前は送信しません。**
+- AIには登録物の ID だけを選ばせ、サーバーとブラウザの両方で「送った候補に実在する ID か」を確認します。
+  場所は保存済みデータから表示し、AIに場所を作らせません。
+- API キーはサーバーの環境変数だけで使い、ブラウザには送りません（`GET /api/ai-search` は利用可否だけを返します）。
+- AI検索が失敗した場合はエラーを表示し、通常検索へ切り替えられます。
+
+### 別のAIサービスに切り替える
+
+`src/server/ai-search/adapter.ts` の `AiSearchAdapter` を実装したクラスを作り、
+`src/server/ai-search/index.ts` の `getAiSearchAdapter()` で環境変数に応じて返すようにします。
+
+## 今回の対象外
+
+家族共有、QRコード、OCR、写真からの自動登録、音声入力。

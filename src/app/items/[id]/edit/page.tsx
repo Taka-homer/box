@@ -1,0 +1,31 @@
+"use client";
+
+import { useParams } from "next/navigation";
+import { useData } from "@/components/data-provider";
+import { ItemForm } from "@/components/item-form";
+import { EmptyState, LinkButton, LoadError, Loading, PageHeader } from "@/components/ui";
+
+export default function EditItemPage() {
+  const { id } = useParams<{ id: string }>();
+  const { status, data } = useData();
+  const item = data.items.find((i) => i.id === id);
+
+  return (
+    <div className="mx-auto max-w-2xl">
+      <PageHeader title="登録内容を編集" back={{ href: `/items/${id}`, label: "詳細へ戻る" }} />
+      {status === "loading" && <Loading />}
+      {status === "error" && <LoadError />}
+      {status === "ready" &&
+        (item ? (
+          <ItemForm key={item.id} item={item} />
+        ) : (
+          <EmptyState
+            title="登録が見つかりません"
+            action={<LinkButton href="/items">一覧へ</LinkButton>}
+          >
+            削除された可能性があります。
+          </EmptyState>
+        ))}
+    </div>
+  );
+}

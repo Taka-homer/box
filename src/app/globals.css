@@ -1,26 +1,67 @@
 @import "tailwindcss";
 
+@theme {
+  --font-sans: "Yu Gothic", "YuGothic", "Hiragino Kaku Gothic ProN", "Meiryo", sans-serif;
+
+  /* 基調色：淡いブルーと細い青の枠線。文字に使う青は読みやすさのため濃くしている */
+  --color-brand: #68add0;
+  --color-brand-strong: #2a7399;
+  --color-brand-deep: #245f7e;
+  --color-brand-soft: #eef6fb;
+  --color-brand-softer: #f6fafd;
+  --color-brand-line: #bfdded;
+
+  --color-ink: #1f2d3a;
+  --color-body: #33424f;
+  --color-muted: #5f6f7c;
+  --color-line: #e3e9ee;
+
+  --color-danger: #b42318;
+  --color-danger-soft: #fef3f2;
+  --color-danger-line: #f4c7c3;
+  --color-warn: #a2470b;
+  --color-warn-soft: #fff7ed;
+  --color-warn-line: #f6d2a8;
+  --color-ok: #1d6b47;
+  --color-ok-soft: #effaf4;
+  --color-ok-line: #b6e2c9;
+}
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  color-scheme: light;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  -webkit-text-size-adjust: 100%;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: #ffffff;
+  color: var(--color-body);
+  font-family: var(--font-sans);
+  font-weight: 400;
+  line-height: 1.7;
+  letter-spacing: 0.02em;
+}
+
+h1,
+h2,
+h3 {
+  color: var(--color-ink);
+  font-weight: 500;
+  line-height: 1.45;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-brand-strong);
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
+dialog::backdrop {
+  background: rgb(31 45 58 / 0.35);
+}
+
+.safe-bottom {
+  padding-bottom: env(safe-area-inset-bottom);
 }
