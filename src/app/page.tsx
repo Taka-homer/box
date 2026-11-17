@@ -54,12 +54,9 @@ export default function HomePage() {
   return (
     <div className="flex flex-col gap-7">
       <section aria-labelledby="home-title" className="flex flex-col gap-4">
-        <div>
-          <p className="text-sm text-muted">わが家の収納</p>
-          <h1 id="home-title" className="mt-0.5 text-[26px] sm:text-[28px]">
-            探しものは、どこ？
-          </h1>
-        </div>
+        <h1 id="home-title" className="text-sm font-normal text-muted">
+          わが家の収納
+        </h1>
         <form
           role="search"
           onSubmit={(e) => {
