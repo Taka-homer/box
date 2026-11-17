@@ -206,6 +206,15 @@ export const ChevronDownIcon = (p: IconProps) => (
   </Svg>
 );
 
+export const GridIcon = (p: IconProps) => (
+  <Svg {...p} fill="currentColor" stroke="none">
+    <rect x="4" y="4" width="7" height="7" rx="1.5" />
+    <rect x="13" y="4" width="7" height="7" rx="1.5" />
+    <rect x="4" y="13" width="7" height="7" rx="1.5" />
+    <rect x="13" y="13" width="7" height="7" rx="1.5" />
+  </Svg>
+);
+
 export const InfoIcon = (p: IconProps) => (
   <Svg {...p}>
     <circle cx="12" cy="12" r="8.5" />
