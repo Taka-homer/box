@@ -3,7 +3,7 @@
 import { useRef, useState } from "react";
 import { useData } from "@/components/data-provider";
 import { ConfirmDialog, Modal } from "@/components/dialog";
-import { ArrowDownIcon, ArrowUpIcon, EditIcon, PlusIcon, TrashIcon } from "@/components/icons";
+import { EditIcon, PlusIcon, TrashIcon } from "@/components/icons";
 import { Button, Card, Field, LoadError, Loading, Notice, PageHeader, TextInput } from "@/components/ui";
 import { errorMessage } from "@/lib/types";
 
@@ -38,19 +38,12 @@ export default function StructurePage() {
     }
   }
 
-  function move<T extends { id: string }>(list: T[], index: number, dir: -1 | 1): string[] {
-    const ids = list.map((x) => x.id);
-    const j = index + dir;
-    [ids[index], ids[j]] = [ids[j], ids[index]];
-    return ids;
-  }
-
   return (
     <div className="mx-auto flex max-w-2xl flex-col gap-5">
       <PageHeader
         title="階と部屋の管理"
         back={{ href: "/places", label: "収納場所" }}
-        description="階と部屋の追加・名前の変更・並べ替え・削除ができます。"
+        description="階と部屋の追加・名前の変更・削除ができます。"
         actions={
           <Button variant="primary" onClick={() => setAdding({ kind: "floor" })} className="min-h-11">
             <PlusIcon size={18} />
@@ -70,19 +63,15 @@ export default function StructurePage() {
       )}
 
       {status === "ready" &&
-        data.floors.map((floor, fi) => {
+        data.floors.map((floor) => {
           const rooms = data.rooms.filter((r) => r.floorId === floor.id);
           return (
             <Card key={floor.id} className="flex flex-col gap-3">
-              <div className="flex flex-wrap items-center justify-between gap-2">
-                <h2 className="min-w-0 break-words text-lg">{floor.name}</h2>
+              <div className="flex items-center justify-between gap-2">
+                <h2 className="min-w-0 flex-1 break-words text-lg">{floor.name}</h2>
                 <RowActions
                   label={floor.name}
                   busy={busy}
-                  canUp={fi > 0}
-                  canDown={fi < data.floors.length - 1}
-                  onUp={() => act(() => repo.reorderFloors(move(data.floors, fi, -1)))}
-                  onDown={() => act(() => repo.reorderFloors(move(data.floors, fi, 1)))}
                   onRename={() => setRenaming({ kind: "floor", id: floor.id, name: floor.name })}
                   onDelete={() => setDeleting({ kind: "floor", id: floor.id, name: floor.name })}
                 />
@@ -91,21 +80,17 @@ export default function StructurePage() {
                 <p className="text-sm text-muted">部屋がまだありません。</p>
               ) : (
                 <ul className="flex flex-col divide-y divide-line rounded-xl border border-line">
-                  {rooms.map((room, ri) => {
+                  {rooms.map((room) => {
                     const storageCount = data.storages.filter((s) => s.roomId === room.id).length;
                     return (
-                      <li key={room.id} className="flex flex-wrap items-center justify-between gap-2 px-3 py-2">
-                        <div className="min-w-0">
+                      <li key={room.id} className="flex items-center justify-between gap-2 px-3 py-2">
+                        <div className="min-w-0 flex-1">
                           <p className="break-words text-ink">{room.name}</p>
                           <p className="text-[13px] text-muted">収納場所 {storageCount}件</p>
                         </div>
                         <RowActions
                           label={room.name}
                           busy={busy}
-                          canUp={ri > 0}
-                          canDown={ri < rooms.length - 1}
-                          onUp={() => act(() => repo.reorderRooms(floor.id, move(rooms, ri, -1)))}
-                          onDown={() => act(() => repo.reorderRooms(floor.id, move(rooms, ri, 1)))}
                           onRename={() => setRenaming({ kind: "room", id: room.id, name: room.name })}
                           onDelete={() => setDeleting({ kind: "room", id: room.id, name: room.name })}
                         />
@@ -189,32 +174,18 @@ export default function StructurePage() {
 function RowActions({
   label,
   busy,
-  canUp,
-  canDown,
-  onUp,
-  onDown,
   onRename,
   onDelete,
 }: {
   label: string;
   busy: boolean;
-  canUp: boolean;
-  canDown: boolean;
-  onUp: () => void;
-  onDown: () => void;
   onRename: () => void;
   onDelete: () => void;
 }) {
   const iconBtn =
     "flex h-11 w-11 items-center justify-center rounded-lg border border-brand-line text-brand-strong hover:bg-brand-soft disabled:border-line disabled:text-[#b7c2ca]";
   return (
-    <div className="flex gap-1.5">
-      <button type="button" className={iconBtn} onClick={onUp} disabled={busy || !canUp} aria-label={`${label}を上へ`}>
-        <ArrowUpIcon size={18} />
-      </button>
-      <button type="button" className={iconBtn} onClick={onDown} disabled={busy || !canDown} aria-label={`${label}を下へ`}>
-        <ArrowDownIcon size={18} />
-      </button>
+    <div className="flex shrink-0 gap-1.5">
       <button type="button" className={iconBtn} onClick={onRename} disabled={busy} aria-label={`${label}の名前を変更`}>
         <EditIcon size={18} />
       </button>
