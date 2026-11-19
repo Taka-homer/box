@@ -36,8 +36,25 @@ export function LinkButton({
   return <Link className={`${BASE} ${VARIANT[variant]} ${className}`} {...rest} />;
 }
 
-export function Card({ className = "", ...rest }: ComponentProps<"div">) {
-  return <div className={`rounded-2xl border border-brand-line bg-white p-4 sm:p-5 ${className}`} {...rest} />;
+/** カード。tone="soft" は詳細・入力ページで使う淡い色のカード */
+export function Card({ className = "", tone = "plain", ...rest }: ComponentProps<"div"> & { tone?: "plain" | "soft" }) {
+  const style =
+    tone === "soft"
+      ? "border-white bg-gradient-to-br from-[#f5fafd] to-[#e9f4fa] shadow-sm"
+      : "border-brand-line bg-white";
+  return <div className={`rounded-2xl border p-4 sm:p-5 ${style} ${className}`} {...rest} />;
+}
+
+/** カードの見出し（アイコン付き） */
+export function CardTitle({ icon, children, id }: { icon: ReactNode; children: ReactNode; id?: string }) {
+  return (
+    <h2 id={id} className="flex items-center gap-2 text-base font-bold text-ink">
+      <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-brand-line bg-white text-brand-strong shadow-sm">
+        {icon}
+      </span>
+      {children}
+    </h2>
+  );
 }
 
 /** 帯の下に敷く白い波（飾り） */

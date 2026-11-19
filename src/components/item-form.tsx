@@ -3,9 +3,10 @@
 import { useRouter } from "next/navigation";
 import { useRef, useState } from "react";
 import { useData } from "./data-provider";
+import { BoxIcon, InfoIcon, PinIcon } from "./icons";
 import { EMPTY_LOCATION, LocationPicker, type LocationErrors, type LocationValue } from "./location-picker";
 import { PhotoInput } from "./photo";
-import { Button, Card, Field, Notice, Select, TextArea, TextInput } from "./ui";
+import { Button, Card, CardTitle, Field, Notice, Select, TextArea, TextInput } from "./ui";
 import { LIMITS } from "@/lib/idb-repository";
 import { CATEGORIES, DEFAULT_CATEGORY, errorMessage, type Category, type Item, type PhotoChange } from "@/lib/types";
 
@@ -123,8 +124,8 @@ export function ItemForm({ item, initialStorageId }: { item?: Item; initialStora
     >
       {result && <Notice kind={result.kind}>{result.message}</Notice>}
 
-      <Card className="flex flex-col gap-5">
-        <h2 className="text-base text-muted">もの・書類</h2>
+      <Card tone="soft" className="flex flex-col gap-5">
+        <CardTitle icon={<BoxIcon size={18} />}>もの・書類</CardTitle>
         <Field label="名前" required error={errors.name} help="例：エアコンの保証書、電動ドライバー">
           {(p) => (
             <TextInput
@@ -150,8 +151,8 @@ export function ItemForm({ item, initialStorageId }: { item?: Item; initialStora
         </Field>
       </Card>
 
-      <Card className="flex flex-col gap-5">
-        <h2 className="text-base text-muted">しまった場所</h2>
+      <Card tone="soft" className="flex flex-col gap-5">
+        <CardTitle icon={<PinIcon size={18} />}>しまった場所</CardTitle>
         <LocationPicker
           value={form.location}
           onChange={(location) => {
@@ -178,8 +179,8 @@ export function ItemForm({ item, initialStorageId }: { item?: Item; initialStora
         </Field>
       </Card>
 
-      <Card className="flex flex-col gap-5">
-        <h2 className="text-base text-muted">補足</h2>
+      <Card tone="soft" className="flex flex-col gap-5">
+        <CardTitle icon={<InfoIcon size={18} />}>補足</CardTitle>
         <Field label="メモ" help="用途や特徴を書いておくと、名前を忘れても探しやすくなります。">
           {(p) => (
             <TextArea {...p} value={form.memo} onChange={(e) => update("memo", e.target.value)} maxLength={LIMITS.memo} />

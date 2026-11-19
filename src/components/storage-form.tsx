@@ -3,8 +3,9 @@
 import { useRouter } from "next/navigation";
 import { useRef, useState } from "react";
 import { useData } from "./data-provider";
+import { BoxIcon } from "./icons";
 import { PhotoInput } from "./photo";
-import { Button, Card, Field, LinkButton, Notice, Select, TextInput } from "./ui";
+import { Button, Card, CardTitle, Field, LinkButton, Notice, Select, TextInput } from "./ui";
 import { errorMessage, type PhotoChange, type Storage } from "@/lib/types";
 
 /** 収納場所の追加・編集フォーム */
@@ -67,7 +68,8 @@ export function StorageForm({ storage, initialRoomId }: { storage?: Storage; ini
   return (
     <form onSubmit={submit} noValidate className="flex flex-col gap-5">
       {result && <Notice kind="error">{result}</Notice>}
-      <Card className="flex flex-col gap-5">
+      <Card tone="soft" className="flex flex-col gap-5">
+        <CardTitle icon={<BoxIcon size={18} />}>収納場所</CardTitle>
         <Field label="階" required error={errors.floor}>
           {(p) => (
             <Select

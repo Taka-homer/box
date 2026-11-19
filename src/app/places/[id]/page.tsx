@@ -4,14 +4,15 @@ import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { Suspense, useMemo, useState } from "react";
 import { useData } from "@/components/data-provider";
 import { ConfirmDialog, Modal } from "@/components/dialog";
-import { EditIcon, PinIcon, PlusIcon, TrashIcon } from "@/components/icons";
-import { SpotArt } from "@/components/illustrations";
+import { BoxIcon, EditIcon, ImageIcon, PinIcon, PlusIcon, TrashIcon } from "@/components/icons";
+import { SpotArt, SteelShelf } from "@/components/illustrations";
 import { ItemCard } from "@/components/item-card";
 import { EMPTY_LOCATION, LocationPicker } from "@/components/location-picker";
 import { PhotoView } from "@/components/photo";
 import {
   Button,
   Card,
+  CardTitle,
   EmptyState,
   LinkButton,
   LoadError,
@@ -55,7 +56,11 @@ function StorageDetail() {
   if (status === "error") return <LoadError />;
   if (!storage) {
     return (
-      <EmptyState title="収納場所が見つかりません" action={<LinkButton href="/places">収納場所へ</LinkButton>}>
+      <EmptyState
+        art={<SpotArt name="boxes" className="h-24 sm:h-28" />}
+        title="収納場所が見つかりません"
+        action={<LinkButton href="/places">収納場所へ</LinkButton>}
+      >
         削除された可能性があります。
       </EmptyState>
     );
@@ -81,23 +86,24 @@ function StorageDetail() {
         title={storage.name}
         back={{ href: "/places", label: "収納場所" }}
         description={
-          <span className="inline-flex items-center gap-1">
-            <PinIcon size={16} className="text-brand-strong" />
-            {[floor?.name, room?.name, storage.name].filter(Boolean).join(" → ")}
+          <span className="inline-flex items-start gap-1">
+            <PinIcon size={16} className="mt-0.5 shrink-0 text-brand-strong" />
+            <span className="break-words">{[floor?.name, room?.name, storage.name].filter(Boolean).join(" → ")}</span>
           </span>
         }
+        art={<SteelShelf className="h-[110px] w-auto sm:h-[140px]" />}
       />
 
       {message && <Notice kind={message.kind}>{message.text}</Notice>}
 
       <div className="grid gap-5 md:grid-cols-[minmax(0,2fr)_minmax(0,3fr)]">
-        <Card className="flex flex-col gap-3 self-start">
-          <h2 className="text-base text-muted">収納場所の写真</h2>
+        <Card tone="soft" className="flex flex-col gap-3 self-start">
+          <CardTitle icon={<ImageIcon size={18} />}>収納場所の写真</CardTitle>
           <PhotoView
             photoId={storage.photoId}
             alt={`${storage.name}の写真`}
             kind="storage"
-            className="aspect-[4/3] w-full rounded-xl border border-line"
+            className={`w-full rounded-xl border border-line ${storage.photoId ? "aspect-[4/3]" : "h-28"}`}
           />
           {!storage.photoId && (
             <p className="text-[13px] text-muted">写真を登録すると、実際の場所を見つけやすくなります。</p>
@@ -120,13 +126,16 @@ function StorageDetail() {
         <section aria-labelledby="storage-items">
           <SectionTitle
             aside={
-              <LinkButton href={`/items/new?storage=${storage.id}`} variant="primary" className="min-h-11">
+              <LinkButton href={`/items/new?storage=${storage.id}`} variant="primary" className="min-h-11 shrink-0 whitespace-nowrap">
                 <PlusIcon size={18} />
                 ここに登録
               </LinkButton>
             }
           >
-            <span id="storage-items">ここにあるもの（{views.length}点）</span>
+            <span id="storage-items" className="flex items-center gap-2 text-base font-bold sm:text-lg">
+              <BoxIcon size={20} className="shrink-0 text-brand-strong" />
+              ここにあるもの（{views.length}点）
+            </span>
           </SectionTitle>
           {views.length === 0 ? (
             <EmptyState art={<SpotArt name="carton" className="h-24 sm:h-28" />} title="まだ何も登録されていません" />

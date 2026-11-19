@@ -3,6 +3,7 @@
 import { useParams } from "next/navigation";
 import { useData } from "@/components/data-provider";
 import { ItemForm } from "@/components/item-form";
+import { OpenCarton, SpotArt } from "@/components/illustrations";
 import { EmptyState, LinkButton, LoadError, Loading, PageHeader } from "@/components/ui";
 
 export default function EditItemPage() {
@@ -12,7 +13,12 @@ export default function EditItemPage() {
 
   return (
     <div className="mx-auto max-w-2xl">
-      <PageHeader title="登録内容を編集" back={{ href: `/items/${id}`, label: "詳細へ戻る" }} />
+      <PageHeader
+        title="登録内容を編集"
+        back={{ href: `/items/${id}`, label: "詳細へ戻る" }}
+        description={item ? `「${item.name}」の名前・場所・写真などを変更します。` : undefined}
+        art={<OpenCarton className="h-[110px] w-auto sm:h-[140px]" />}
+      />
       {status === "loading" && <Loading />}
       {status === "error" && <LoadError />}
       {status === "ready" &&
@@ -20,6 +26,7 @@ export default function EditItemPage() {
           <ItemForm key={item.id} item={item} />
         ) : (
           <EmptyState
+            art={<SpotArt name="boxes" className="h-24 sm:h-28" />}
             title="登録が見つかりません"
             action={<LinkButton href="/items">一覧へ</LinkButton>}
           >
