@@ -238,7 +238,7 @@ export function ItemSearch() {
         <label htmlFor="item-search" className="flex flex-wrap items-center gap-x-2 text-base font-bold text-ink">
           <GridIcon size={20} className="shrink-0 text-brand-strong" />
           {mode === "ai" ? "用途や特徴を入力" : "名前や特徴で検索"}
-          <span className="rounded-full bg-brand-soft px-2.5 py-0.5 text-xs font-normal text-brand-strong">
+          <span className="rounded-full border border-brand-line bg-white px-2.5 py-0.5 text-xs font-normal text-brand-strong">
             {mode === "ai" ? "AI検索" : "通常検索"}
           </span>
         </label>

@@ -125,9 +125,9 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         render={(pathname, params) => (
           <nav
             aria-label="下部メニュー"
-            className="safe-bottom fixed inset-x-0 bottom-0 z-30 border-t border-brand-line bg-white/95 backdrop-blur md:hidden"
+            className="safe-bottom fixed inset-x-0 bottom-0 z-30 border-t border-brand-line bg-white/95 shadow-[0_-4px_16px_rgb(42_115_153/0.08)] backdrop-blur md:hidden"
           >
-            <ul className="mx-auto grid max-w-md grid-cols-4">
+            <ul className="mx-auto grid max-w-md grid-cols-4 gap-1 px-2 py-1.5">
               {MOBILE_NAV.map(({ href, label, Icon, match }) => {
                 const active = match(pathname, params);
                 return (
@@ -135,15 +135,11 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                     <Link
                       href={href}
                       aria-current={active ? "page" : undefined}
-                      className={`flex min-h-16 flex-col items-center justify-center gap-0.5 whitespace-nowrap text-[11px] min-[380px]:text-[12px] ${
-                        active ? "text-brand-strong font-medium" : "text-muted"
+                      className={`flex min-h-14 flex-col items-center justify-center gap-0.5 whitespace-nowrap rounded-2xl text-[11px] transition-colors min-[380px]:text-[12px] ${
+                        active ? "bg-[#e3f2fa] font-medium text-brand-strong" : "text-muted hover:bg-brand-softer"
                       }`}
                     >
-                      <span
-                        className={`flex h-8 w-12 items-center justify-center rounded-full ${active ? "bg-brand-soft" : ""}`}
-                      >
-                        <Icon size={22} />
-                      </span>
+                      <Icon size={22} />
                       {label}
                     </Link>
                   </li>

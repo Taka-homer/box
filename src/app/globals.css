@@ -36,7 +36,8 @@ html {
 }
 
 body {
-  background: #ffffff;
+  background: linear-gradient(180deg, #f5fafd 0%, #eef6fb 100%) fixed;
+  background-color: #f2f8fc;
   color: var(--color-body);
   font-family: var(--font-sans);
   font-weight: 400;

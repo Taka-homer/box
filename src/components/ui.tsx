@@ -110,10 +110,11 @@ export function PageHeader({
           className={`relative flex min-h-[124px] items-center overflow-hidden rounded-3xl px-5 py-5 sm:min-h-[150px] sm:px-7 ${
             hero
               ? "bg-gradient-to-br from-[#3fa3c8] via-[#56b7d6] to-[#a9def0]"
-              : "border border-white bg-gradient-to-br from-[#f5fafd] to-[#e2f1f9] shadow-sm"
+              : "border border-white bg-gradient-to-br from-[#f3f9fd] via-[#e6f3fb] to-[#cfe8f6] shadow-sm"
           }`}
         >
           <div className="pointer-events-none absolute inset-y-0 right-0 flex items-end">{art}</div>
+          {!hero && <Wave className="bottom-1 text-[#b9ddf1]/50" />}
           <Wave className={hero ? "text-white/20" : "text-white/70"} />
           <div className="relative max-w-[60%] sm:max-w-[65%]">
             <h1
@@ -313,7 +314,7 @@ export function Badge({ children, tone = "brand" }: { children: ReactNode; tone?
   const style = {
     brand: "bg-brand-soft text-brand-strong",
     warn: "bg-warn-soft text-warn border border-warn-line",
-    muted: "bg-[#f1f4f6] text-muted",
+    muted: "bg-[#eef3f7] text-body",
   }[tone];
-  return <span className={`inline-flex items-center rounded-md px-2 py-0.5 text-xs ${style}`}>{children}</span>;
+  return <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs ${style}`}>{children}</span>;
 }
