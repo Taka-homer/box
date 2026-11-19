@@ -17,7 +17,7 @@ import {
 import { FileBox, HeroShelf, OpenCarton, SearchBox, StackedBoxes, SteelShelf } from "@/components/illustrations";
 import { PhotoView } from "@/components/photo";
 import { Button, Card, EmptyState, LinkButton, LoadError, Loading, Notice } from "@/components/ui";
-import { addDemoData } from "@/lib/demo";
+import { addDemoData, fetchDemoPhoto } from "@/lib/demo";
 import { buildLookup, resolveItem } from "@/lib/search";
 import { errorMessage } from "@/lib/types";
 
@@ -54,7 +54,7 @@ export default function HomePage() {
     setDemoBusy(true);
     setDemoMessage(null);
     try {
-      const added = await addDemoData(repo);
+      const added = await addDemoData(repo, fetchDemoPhoto);
       await refresh();
       setDemoMessage({
         kind: "success",
@@ -75,8 +75,8 @@ export default function HomePage() {
         aria-label="登録の状況"
         className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#3fa3c8] via-[#56b7d6] to-[#a9def0] p-4 sm:p-6"
       >
-        <HeroShelf className="pointer-events-none absolute -bottom-2 -right-4 h-[150px] w-auto sm:h-[200px]" />
-        <p className="relative max-w-[16rem] text-[15px] font-medium leading-relaxed text-white [text-shadow:0_1px_2px_rgb(0_60_90/0.25)] sm:max-w-none sm:text-lg">
+        <HeroShelf className="pointer-events-none absolute bottom-0 right-0 h-[118px] w-auto opacity-90 sm:h-[210px] sm:opacity-100" />
+        <p className="relative max-w-[15rem] text-[15px] font-medium leading-relaxed text-white [text-shadow:0_1px_2px_rgb(0_60_90/0.25)] sm:max-w-none sm:text-lg">
           家の収納を見える化して
           <br />
           探す・しまう・管理するをもっと簡単に
@@ -184,7 +184,7 @@ export default function HomePage() {
                 {label}
               </span>
               <span className="relative mt-1 max-w-[60%] text-[12px] leading-snug text-body sm:text-[13px]">{sub}</span>
-              <Art className="pointer-events-none absolute -bottom-1 -right-1 h-[68px] w-auto sm:h-20" />
+              <Art className="pointer-events-none absolute bottom-0 right-0 h-[76px] w-auto sm:h-24" />
             </Link>
           ))}
         </nav>

@@ -55,10 +55,10 @@ describe("通常検索", () => {
 describe("見本データ", () => {
   it("繰り返し追加しても重複せず、見本だけを削除できる", async () => {
     const repo = freshRepo();
-    expect(await addDemoData(repo)).toBe(4);
+    expect(await addDemoData(repo)).toBe(7);
     expect(await addDemoData(repo)).toBe(0);
     const data = await repo.loadAll();
-    expect(data.items).toHaveLength(4);
+    expect(data.items).toHaveLength(7);
     expect(data.floors).toHaveLength(2);
     expect(data.items.every((i) => i.demoKey)).toBe(true);
 

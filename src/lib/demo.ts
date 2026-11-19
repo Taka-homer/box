@@ -11,7 +11,22 @@ interface DemoItem {
   place: [floor: string, room: string, storage: string];
   detail?: string;
   memo?: string;
+  /** public/ 以下の写真のパス */
+  photo?: string;
 }
+
+/** 写真のパスから画像を読み込む。読めないときは null（写真なしで登録する） */
+export type DemoPhotoLoader = (path: string) => Promise<Blob | null>;
+
+/** ブラウザで public/ の画像を取得する */
+export const fetchDemoPhoto: DemoPhotoLoader = async (path) => {
+  try {
+    const res = await fetch(path);
+    return res.ok ? await res.blob() : null;
+  } catch {
+    return null;
+  }
+};
 
 export const DEMO_ITEMS: DemoItem[] = [
   {
@@ -27,6 +42,7 @@ export const DEMO_ITEMS: DemoItem[] = [
     name: "エアコンの取扱説明書",
     category: "書類",
     place: ["2階", "書斎", "本棚"],
+    photo: "/images/demo/manual.png",
   },
   {
     key: "demo-item-driver",
@@ -40,13 +56,35 @@ export const DEMO_ITEMS: DemoItem[] = [
     category: "季節用品",
     place: ["2階", "納戸", "収納ボックス"],
   },
+  {
+    key: "demo-item-blanket",
+    name: "ブランケット",
+    category: "季節用品",
+    place: ["2階", "納戸", "収納ボックス"],
+    detail: "青いチェック柄",
+    photo: "/images/demo/blanket.png",
+  },
+  {
+    key: "demo-item-emergency-kit",
+    name: "防災セット",
+    category: "日用品",
+    place: ["1階", "納戸", "棚の下段"],
+    photo: "/images/demo/emergency-kit.png",
+  },
+  {
+    key: "demo-item-rice-cooker",
+    name: "炊飯器",
+    category: "家電・付属品",
+    place: ["1階", "キッチン", "食器棚の横"],
+    photo: "/images/demo/rice-cooker.png",
+  },
 ];
 
 /**
  * 見本データを追加する。同じ名前の階・部屋・収納場所があればそれを使い、
  * 追加済みの見本のものは追加しない。追加した件数を返す。
  */
-export async function addDemoData(repo: Repository): Promise<number> {
+export async function addDemoData(repo: Repository, loadPhoto?: DemoPhotoLoader): Promise<number> {
   let added = 0;
   for (const demo of DEMO_ITEMS) {
     const data = await repo.loadAll();
@@ -67,6 +105,7 @@ export async function addDemoData(repo: Repository): Promise<number> {
         { demoKey: `demo-storage-${floorName}-${roomName}-${storageName}` },
       ));
 
+    const blob = demo.photo && loadPhoto ? await loadPhoto(demo.photo) : null;
     await repo.addItem(
       {
         name: demo.name,
@@ -75,7 +114,7 @@ export async function addDemoData(repo: Repository): Promise<number> {
         detail: demo.detail ?? "",
         memo: demo.memo ?? "",
       },
-      { kind: "keep" },
+      blob ? { kind: "set", blob } : { kind: "keep" },
       { demoKey: demo.key },
     );
     added++;

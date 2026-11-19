@@ -8,7 +8,7 @@ import { DocIcon, DownloadIcon, SparkIcon, UploadIcon } from "@/components/icons
 import { Button, Card, LinkButton, Notice, PageHeader, SectionTitle } from "@/components/ui";
 import { fetchAiStatus } from "@/lib/ai-client";
 import { backupFileName, MAX_BACKUP_BYTES, parseBackup, serializeBackup, type BackupSummary } from "@/lib/backup";
-import { addDemoData } from "@/lib/demo";
+import { addDemoData, fetchDemoPhoto } from "@/lib/demo";
 import { IMAGE_HELP_TEXT } from "@/lib/image";
 import { formatDateTime } from "@/lib/text";
 import { errorMessage, type Snapshot } from "@/lib/types";
@@ -212,7 +212,7 @@ export default function SettingsPage() {
         </SectionTitle>
         <Card className="flex flex-col gap-3">
           <p className="text-[15px]">
-            使い方を試すための見本（エアコンの保証書など4件）を追加します。見本には「見本」の表示が付き、何度押しても重複しません。
+            使い方を試すための見本（エアコンの保証書など7件）を追加します。見本には「見本」の表示が付き、何度押しても重複しません。
           </p>
           {demoMsg && <Notice kind={demoMsg.kind}>{demoMsg.text}</Notice>}
           <div className="flex flex-col gap-2 sm:flex-row">
@@ -220,7 +220,7 @@ export default function SettingsPage() {
               onClick={() =>
                 guard(async () => {
                   try {
-                    const added = await addDemoData(repo);
+                    const added = await addDemoData(repo, fetchDemoPhoto);
                     await refresh();
                     setDemoMsg({
                       kind: "success",
