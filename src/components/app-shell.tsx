@@ -19,11 +19,11 @@ const DESKTOP_NAV = [
   { href: "/settings", label: "設定", Icon: GearIcon },
 ];
 
-/** スマホの下部メニュー：ものを登録・収納場所・ホーム・最近の登録の4つ */
+/** スマホの下部メニュー：ホーム・ものを登録・収納場所・最近の登録の4つ */
 const MOBILE_NAV = [
+  { href: "/", label: "ホーム", Icon: HomeIcon, match: (path: string) => path === "/" },
   { href: "/items/new", label: "ものを登録", Icon: PlusIcon, match: (path: string) => path === "/items/new" },
   { href: "/places", label: "収納場所", Icon: BoxIcon, match: (path: string) => isActive(path, "/places") },
-  { href: "/", label: "ホーム", Icon: HomeIcon, match: (path: string) => path === "/" },
   {
     href: "/items?view=recent",
     label: "最近の登録",
