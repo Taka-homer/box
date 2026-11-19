@@ -17,7 +17,7 @@ export default function EditItemPage() {
         title="登録内容を編集"
         back={{ href: `/items/${id}`, label: "詳細へ戻る" }}
         description={item ? `「${item.name}」の名前・場所・写真などを変更します。` : undefined}
-        art={<OpenCarton className="h-[110px] w-auto sm:h-[140px]" />}
+        art={<OpenCarton className="h-[100px] w-auto sm:h-[140px]" />}
       />
       {status === "loading" && <Loading />}
       {status === "error" && <LoadError />}

@@ -22,7 +22,7 @@ export default function NewItemPage() {
         title="ものを登録"
         back={{ href: "/", label: "ホーム" }}
         description="名前と、しまった場所を登録します。写真はなくても大丈夫です。"
-        art={<OpenCarton className="h-[110px] w-auto sm:h-[140px]" />}
+        art={<OpenCarton className="h-[100px] w-auto sm:h-[140px]" />}
       />
       <Suspense fallback={<Loading />}>
         <NewItem />

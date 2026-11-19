@@ -112,7 +112,7 @@ function ItemDetail() {
             </span>
           </span>
         }
-        art={<OpenCarton className="h-[110px] w-auto sm:h-[140px]" />}
+        art={<OpenCarton className="h-[100px] w-auto sm:h-[140px]" />}
       />
 
       {savedNotice && <Notice kind="success">保存しました。</Notice>}

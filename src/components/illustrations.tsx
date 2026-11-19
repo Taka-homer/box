@@ -44,9 +44,9 @@ export function SearchBox({ className = "" }: Props) {
 const SOFT_EDGE =
   "mix-blend-multiply [mask-image:linear-gradient(to_right,transparent,black_30%),linear-gradient(to_bottom,transparent,black_25%)] [mask-composite:intersect]";
 
-/** 「ものを登録」：中身の入った段ボール箱 */
+/** 「ものを登録」：たたんだセーターの写真 */
 export function OpenCarton({ className = "" }: Props) {
-  return <Art src="/images/home/open-carton.png" className={`${SOFT_EDGE} ${className}`} />;
+  return <Art src="/images/items/sweaters.webp" className={`${SOFT_EDGE} ${className}`} />;
 }
 
 /** 「収納場所」：タンスとクローゼット（ClosetArt と同じ画像を、淡い色のカード向けに表示する） */
@@ -65,7 +65,7 @@ export function StackedBoxes({ className = "" }: Props) {
 }
 
 const SPOT_SRC = {
-  carton: "/images/home/open-carton.png",
+  carton: "/images/items/sweaters.webp",
   shelf: "/images/places/closet.webp",
   files: "/images/home/file-box.png",
   boxes: "/images/home/stacked-boxes.png",
