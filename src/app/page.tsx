@@ -8,7 +8,6 @@ import {
   BoxIcon,
   ChevronRightIcon,
   ClockIcon,
-  DocIcon,
   GridIcon,
   LayersIcon,
   PlusIcon,
@@ -43,7 +42,6 @@ export default function HomePage() {
   const stats = [
     { label: "登録したもの", value: data.items.length, unit: "件", Icon: BoxIcon },
     { label: "収納場所", value: data.storages.length, unit: "か所", Icon: LayersIcon },
-    { label: "書類", value: data.items.filter((i) => i.category === "書類").length, unit: "件", Icon: DocIcon },
   ];
   const missingCount = data.items.filter((i) => i.status === "missing").length;
   const isFirstRun = ready && data.floors.length === 0 && data.items.length === 0;
@@ -80,7 +78,7 @@ export default function HomePage() {
           <br />
           探す・しまう・管理するをもっと簡単に
         </p>
-        <dl className="relative mt-3 inline-grid max-w-full grid-cols-3 divide-x divide-brand-line rounded-2xl bg-white/90 py-2 shadow-sm backdrop-blur">
+        <dl className="relative mt-3 inline-grid max-w-full grid-cols-2 divide-x divide-brand-line rounded-2xl bg-white/90 py-2 shadow-sm backdrop-blur">
           {stats.map(({ label, value, unit, Icon }) => (
             <div key={label} className="flex min-w-0 items-center gap-1.5 px-2.5 sm:px-4">
               <Icon size={18} className="shrink-0 text-brand-strong" />
