@@ -1,9 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 import { Suspense, type ReactNode } from "react";
-import { BoxIcon, GearIcon, HomeIcon, PlusIcon, SearchIcon } from "./icons";
+import { BoxIcon, ClockIcon, DocIcon, GearIcon, HomeIcon, PlusIcon, SearchIcon } from "./icons";
 
 function isActive(pathname: string, href: string) {
   if (href === "/") return pathname === "/";
@@ -19,22 +19,39 @@ const DESKTOP_NAV = [
   { href: "/settings", label: "設定", Icon: GearIcon },
 ];
 
+/** スマホの下部メニュー：ホーム ＋ ホーム画面の「よく使う機能」4つ */
 const MOBILE_NAV = [
-  { href: "/", label: "ホーム", Icon: HomeIcon },
-  { href: "/places", label: "収納場所", Icon: BoxIcon },
+  { href: "/", label: "ホーム", Icon: HomeIcon, match: (path: string) => path === "/" },
+  { href: "/items/new", label: "ものを登録", Icon: PlusIcon, match: (path: string) => path === "/items/new" },
+  { href: "/places", label: "収納場所", Icon: BoxIcon, match: (path: string) => isActive(path, "/places") },
+  {
+    href: "/items?category=書類",
+    label: "書類",
+    Icon: DocIcon,
+    match: (path: string, q: URLSearchParams) => path === "/items" && q.get("category") === "書類",
+  },
+  {
+    href: "/items?view=recent",
+    label: "最近の登録",
+    Icon: ClockIcon,
+    match: (path: string, q: URLSearchParams) => path === "/items" && q.get("view") === "recent",
+  },
 ];
 
+const NO_PARAMS = new URLSearchParams();
+
 /** 現在のURLに応じた表示。URLが確定するまでは選択なしで表示する */
-function WithPath({ render }: { render: (pathname: string) => ReactNode }) {
+function WithPath({ render }: { render: (pathname: string, params: URLSearchParams) => ReactNode }) {
   return (
-    <Suspense fallback={render("")}>
+    <Suspense fallback={render("", NO_PARAMS)}>
       <PathReader render={render} />
     </Suspense>
   );
 }
 
-function PathReader({ render }: { render: (pathname: string) => ReactNode }) {
-  return render(usePathname() ?? "/");
+function PathReader({ render }: { render: (pathname: string, params: URLSearchParams) => ReactNode }) {
+  const params = useSearchParams();
+  return render(usePathname() ?? "/", new URLSearchParams(params?.toString() ?? ""));
 }
 
 export function AppShell({ children }: { children: React.ReactNode }) {
@@ -111,25 +128,25 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       </main>
 
       <WithPath
-        render={(pathname) => (
+        render={(pathname, params) => (
           <nav
             aria-label="下部メニュー"
             className="safe-bottom fixed inset-x-0 bottom-0 z-30 border-t border-brand-line bg-white/95 backdrop-blur md:hidden"
           >
-            <ul className="mx-auto grid max-w-md grid-cols-2">
-              {MOBILE_NAV.map(({ href, label, Icon }) => {
-                const active = isActive(pathname, href);
+            <ul className="mx-auto grid max-w-md grid-cols-5">
+              {MOBILE_NAV.map(({ href, label, Icon, match }) => {
+                const active = match(pathname, params);
                 return (
                   <li key={href}>
                     <Link
                       href={href}
                       aria-current={active ? "page" : undefined}
-                      className={`flex min-h-16 flex-col items-center justify-center gap-0.5 text-[13px] ${
+                      className={`flex min-h-16 flex-col items-center justify-center gap-0.5 whitespace-nowrap text-[11px] min-[380px]:text-[12px] ${
                         active ? "text-brand-strong font-medium" : "text-muted"
                       }`}
                     >
                       <span
-                        className={`flex h-8 w-14 items-center justify-center rounded-full ${active ? "bg-brand-soft" : ""}`}
+                        className={`flex h-8 w-12 items-center justify-center rounded-full ${active ? "bg-brand-soft" : ""}`}
                       >
                         <Icon size={22} />
                       </span>
