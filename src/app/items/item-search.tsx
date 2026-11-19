@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useData } from "@/components/data-provider";
-import { CloseIcon, GridIcon, PlusIcon, SearchIcon, SparkIcon } from "@/components/icons";
+import { ChevronRightIcon, ClockIcon, CloseIcon, GridIcon, PlusIcon, SearchIcon, SparkIcon } from "@/components/icons";
 import { FileBox, SearchBox, SpotArt, StackedBoxes } from "@/components/illustrations";
 import { ItemCard } from "@/components/item-card";
 import {
@@ -32,6 +32,9 @@ import { categoryOptions } from "@/lib/categories";
 import { errorMessage, type Category, type ItemStatus } from "@/lib/types";
 
 type Mode = "keyword" | "ai";
+
+/** 「最近の登録」で一番上に表示する件数 */
+const RECENT_COUNT = 5;
 
 function readFilters(params: URLSearchParams): SearchFilters {
   const category = (params.get("category") ?? "").trim();
@@ -125,6 +128,8 @@ export function ItemSearch() {
   }
 
   const results = useMemo(() => searchItems(data, filters), [data, filters]);
+  // 「最近の登録」で一番上に出す、直近に登録したもの
+  const latest = useMemo(() => searchItems(data, {}).slice(0, RECENT_COUNT), [data]);
   // 関連語辞書による検索（AIではない）。通常検索で見つかったものは除く
   const related = useMemo(
     () => (filters.q ? searchRelated(data, filters, new Set(results.map((v) => v.item.id))) : null),
@@ -149,14 +154,21 @@ export function ItemSearch() {
     Boolean,
   ).length;
 
-  const title = view === "recent" ? "最近の登録" : filters.category === "書類" && !filters.q ? "書類" : "探す・一覧";
+  const isRecent = view === "recent";
+  const searching = Boolean(filters.q) || activeCount > 0;
+  // 「最近の登録」では、検索・絞り込みをしたときだけ結果を出す
+  const showResults = !isRecent || searching || data.items.length === 0;
+
+  const title = isRecent ? "最近の登録" : filters.category === "書類" && !filters.q ? "書類" : "探す・一覧";
 
   return (
     <div className="flex flex-col gap-5">
       <PageHeader
         title={title}
         back={{ href: "/", label: "ホーム" }}
-        description={view === "recent" ? "新しく登録した順に表示しています。" : "名前・詳しい位置・メモから探せます。"}
+        description={
+          isRecent ? `直近に登録した${RECENT_COUNT}点を表示しています。下から検索もできます。` : "名前・詳しい位置・メモから探せます。"
+        }
         // 淡い背景の画像は、青い帯に重ねると濁るので淡い帯にする
         tone={title === "探す・一覧" ? "hero" : "soft"}
         art={
@@ -169,6 +181,22 @@ export function ItemSearch() {
           )
         }
       />
+
+      {isRecent && status === "ready" && latest.length > 0 && (
+        <section aria-labelledby="latest-title" className="flex flex-col gap-2.5">
+          <h2 id="latest-title" className="flex items-center gap-2 text-lg font-bold">
+            <ClockIcon size={20} className="shrink-0 text-brand-strong" />
+            最近登録したもの（{latest.length}点）
+          </h2>
+          <ul className="flex flex-col gap-2.5">
+            {latest.map((v) => (
+              <li key={v.item.id}>
+                <ItemCard view={v} />
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
 
       {aiAvailable && (
         <div
@@ -332,7 +360,20 @@ export function ItemSearch() {
       {status === "loading" && <Loading />}
       {status === "error" && <LoadError />}
 
-      {status === "ready" && mode === "keyword" && (
+      {status === "ready" && mode === "keyword" && !showResults && (
+        <div className="flex flex-col items-start gap-2 rounded-2xl border border-white bg-gradient-to-br from-[#f5fafd] to-[#e9f4fa] p-4 shadow-sm">
+          <p className="text-sm text-body">名前や特徴で検索するか、絞り込みを使うと、ここに結果が表示されます。</p>
+          <Link
+            href="/items"
+            className="inline-flex min-h-11 items-center gap-0.5 text-sm font-medium text-brand-strong hover:underline"
+          >
+            登録したものをすべて見る（{data.items.length}点）
+            <ChevronRightIcon size={16} />
+          </Link>
+        </div>
+      )}
+
+      {status === "ready" && mode === "keyword" && showResults && (
         <section aria-label="検索結果" aria-live="polite">
           {data.items.length === 0 ? (
             <EmptyState
