@@ -40,7 +40,7 @@ export function LinkButton({
 export function Card({ className = "", tone = "plain", ...rest }: ComponentProps<"div"> & { tone?: "plain" | "soft" }) {
   const style =
     tone === "soft"
-      ? "border-white bg-gradient-to-br from-[#f5fafd] to-[#e9f4fa] shadow-sm"
+      ? "border-white bg-[#eef6fb] shadow-sm"
       : "border-brand-line bg-white";
   return <div className={`rounded-2xl border p-4 sm:p-5 ${style} ${className}`} {...rest} />;
 }
@@ -279,7 +279,7 @@ export function EmptyState({
 }) {
   if (art) {
     return (
-      <div className="relative flex flex-col items-center overflow-hidden rounded-3xl border border-white bg-gradient-to-b from-[#f5fafd] to-[#e2f1f9] px-5 pb-10 pt-6 text-center shadow-sm">
+      <div className="relative flex flex-col items-center overflow-hidden rounded-3xl border border-white bg-[#eef6fb] px-5 pb-10 pt-6 text-center shadow-sm">
         <div className="mb-2">{art}</div>
         <p className="text-lg font-bold text-ink sm:text-xl">{title}</p>
         {children && <div className="relative mt-1.5 text-sm text-body">{children}</div>}

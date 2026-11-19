@@ -98,7 +98,7 @@ export default function PlacesPage() {
                   return (
                     <div
                       key={room.id}
-                      className="flex flex-col gap-2.5 rounded-2xl border border-white bg-gradient-to-br from-[#f5fafd] to-[#e9f4fa] p-3 shadow-sm sm:p-4"
+                      className="flex flex-col gap-2.5 rounded-2xl border border-white bg-[#eaf7f3] p-3 shadow-sm sm:p-4"
                     >
                       <div className="flex items-center justify-between gap-2">
                         <h3 className="flex min-w-0 items-center gap-2.5 text-base font-bold">

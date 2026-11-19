@@ -359,7 +359,7 @@ export function ItemSearch() {
       {status === "error" && <LoadError />}
 
       {status === "ready" && mode === "keyword" && !showResults && (
-        <div className="flex flex-col items-start gap-2 rounded-2xl border border-white bg-gradient-to-br from-[#f5fafd] to-[#e9f4fa] p-4 shadow-sm">
+        <div className="flex flex-col items-start gap-2 rounded-2xl border border-white bg-[#eef6fb] p-4 shadow-sm">
           <p className="text-sm text-body">名前や特徴で検索するか、絞り込みを使うと、ここに結果が表示されます。</p>
           <Link
             href="/items"

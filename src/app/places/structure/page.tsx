@@ -68,7 +68,7 @@ export default function StructurePage() {
         data.floors.map((floor) => {
           const rooms = data.rooms.filter((r) => r.floorId === floor.id);
           return (
-            <Card key={floor.id} className="flex flex-col gap-3 border-white bg-gradient-to-br from-[#f5fafd] to-[#e9f4fa] shadow-sm">
+            <Card key={floor.id} className="flex flex-col gap-3 border-white bg-[#eaf7f3] shadow-sm">
               <div className="flex items-center justify-between gap-2">
                 <h2 className="min-w-0 flex-1 break-words text-xl font-bold">{floor.name}</h2>
                 <RowActions
