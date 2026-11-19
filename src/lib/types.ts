@@ -10,9 +10,13 @@ export const CATEGORIES = [
   "その他",
 ] as const;
 
-export type Category = (typeof CATEGORIES)[number];
+/** カテゴリ名。CATEGORIES（最初から用意しているもの）のほか、家族が追加した名前も入る */
+export type Category = string;
 
 export const DEFAULT_CATEGORY: Category = "未分類";
+
+/** 追加するカテゴリ名の最大文字数 */
+export const CATEGORY_MAX = 20;
 
 export type ItemStatus = "normal" | "missing";
 

@@ -1,7 +1,7 @@
 // AI検索でブラウザとサーバーがやり取りするデータの形（写真は含めない）
 
 import { z } from "zod";
-import { CATEGORIES } from "./types";
+import { CATEGORY_MAX } from "./types";
 
 export const AI_MAX_CANDIDATES = 1000;
 export const AI_MAX_QUERY = 200;
@@ -9,7 +9,7 @@ export const AI_MAX_QUERY = 200;
 export const aiCandidateSchema = z.object({
   id: z.string().min(1).max(100),
   name: z.string().max(200),
-  category: z.enum(CATEGORIES),
+  category: z.string().min(1).max(CATEGORY_MAX),
   detail: z.string().max(400),
   memo: z.string().max(2000),
 });

@@ -1,14 +1,15 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useData } from "./data-provider";
 import { BoxIcon, InfoIcon, PinIcon } from "./icons";
 import { EMPTY_LOCATION, LocationPicker, type LocationErrors, type LocationValue } from "./location-picker";
 import { PhotoInput } from "./photo";
 import { Button, Card, CardTitle, Field, Notice, Select, TextArea, TextInput } from "./ui";
+import { categoryOptions, resolveCategory } from "@/lib/categories";
 import { LIMITS } from "@/lib/idb-repository";
-import { CATEGORIES, DEFAULT_CATEGORY, errorMessage, type Category, type Item, type PhotoChange } from "@/lib/types";
+import { CATEGORY_MAX, DEFAULT_CATEGORY, errorMessage, type Category, type Item, type PhotoChange } from "@/lib/types";
 
 interface FormState {
   name: string;
@@ -20,7 +21,11 @@ interface FormState {
 
 interface FormErrors extends LocationErrors {
   name?: string;
+  category?: string;
 }
+
+/** カテゴリの選択肢のうち「カテゴリを追加」を表す値 */
+const ADD_CATEGORY = "__add_category__";
 
 export function locationOfStorage(
   data: { rooms: { id: string; floorId: string }[]; storages: { id: string; roomId: string }[] },
@@ -36,6 +41,7 @@ export function ItemForm({ item, initialStorageId }: { item?: Item; initialStora
   const { data, repo, refresh } = useData();
   const router = useRouter();
   const nameRef = useRef<HTMLInputElement>(null);
+  const newCategoryRef = useRef<HTMLInputElement>(null);
   const submitting = useRef(false);
 
   const [form, setForm] = useState<FormState>(() => ({
@@ -50,12 +56,22 @@ export function ItemForm({ item, initialStorageId }: { item?: Item; initialStora
   const [errors, setErrors] = useState<FormErrors>({});
   const [busy, setBusy] = useState(false);
   const [result, setResult] = useState<{ kind: "success" | "error"; message: string } | null>(null);
+  // 新しいカテゴリを入力中なら、その入力値（選択肢から選んでいるときは null）
+  const [newCategory, setNewCategory] = useState<string | null>(null);
+  const addingCategory = newCategory !== null;
+  const categories = categoryOptions(data.items, item?.category, form.category);
+
+  // 「カテゴリを追加」を選んだら、名前の入力欄に移る
+  useEffect(() => {
+    if (addingCategory) newCategoryRef.current?.focus();
+  }, [addingCategory]);
 
   const update = <K extends keyof FormState>(key: K, value: FormState[K]) => setForm((f) => ({ ...f, [key]: value }));
 
   function validate(): FormErrors {
     const e: FormErrors = {};
     if (!form.name.trim()) e.name = "名前を入力してください。";
+    if (addingCategory && !newCategory.trim()) e.category = "新しいカテゴリ名を入力してください。";
     if (!form.location.floorId) e.floorId = "階を選んでください。";
     if (!form.location.roomId) e.roomId = "部屋を選んでください。";
     if (!form.location.storageId) e.storageId = "収納場所を選んでください。";
@@ -72,18 +88,19 @@ export function ItemForm({ item, initialStorageId }: { item?: Item; initialStora
       setResult({ kind: "error", message: "入力内容を確認してください。赤字の項目に不足があります。" });
       window.scrollTo({ top: 0, behavior: "smooth" });
       if (e.name) nameRef.current?.focus({ preventScroll: true });
+      else if (e.category) newCategoryRef.current?.focus({ preventScroll: true });
       return;
     }
     submitting.current = true;
     setBusy(true);
-    const input = {
-      name: form.name,
-      category: form.category,
-      storageId: form.location.storageId,
-      detail: form.detail,
-      memo: form.memo,
-    };
     try {
+      const input = {
+        name: form.name,
+        category: addingCategory ? resolveCategory(newCategory, categories) : form.category,
+        storageId: form.location.storageId,
+        detail: form.detail,
+        memo: form.memo,
+      };
       if (item) {
         await repo.updateItem(item.id, input, photo);
         await refresh();
@@ -95,6 +112,7 @@ export function ItemForm({ item, initialStorageId }: { item?: Item; initialStora
       if (continueNext) {
         // 収納場所の選択は引き継ぎ、もの固有の入力欄をクリアする
         setForm((f) => ({ ...f, name: "", category: DEFAULT_CATEGORY, detail: "", memo: "" }));
+        setNewCategory(null);
         setPhoto({ kind: "keep" });
         setPhotoKey((k) => k + 1);
         setResult({ kind: "success", message: `「${created.name}」を保存しました。続けて同じ収納場所に登録できます。` });
@@ -140,15 +158,61 @@ export function ItemForm({ item, initialStorageId }: { item?: Item; initialStora
         </Field>
         <Field label="カテゴリ" required>
           {(p) => (
-            <Select {...p} value={form.category} onChange={(e) => update("category", e.target.value as Category)}>
-              {CATEGORIES.map((c) => (
+            <Select
+              {...p}
+              value={addingCategory ? ADD_CATEGORY : form.category}
+              onChange={(e) => {
+                const v = e.target.value;
+                if (v === ADD_CATEGORY) {
+                  setNewCategory("");
+                  return;
+                }
+                setNewCategory(null);
+                setErrors((er) => ({ ...er, category: undefined }));
+                update("category", v as Category);
+              }}
+            >
+              {categories.map((c) => (
                 <option key={c} value={c}>
                   {c}
                 </option>
               ))}
+              <option value={ADD_CATEGORY}>＋ カテゴリを追加</option>
             </Select>
           )}
         </Field>
+        {addingCategory && (
+          <div className="flex flex-col gap-2 rounded-xl border border-brand-line bg-white/70 p-3">
+            <Field
+              label="新しいカテゴリ名"
+              required
+              error={errors.category}
+              help={`${CATEGORY_MAX}文字まで。保存すると、次からはカテゴリの一覧から選べます。`}
+            >
+              {(p) => (
+                <TextInput
+                  {...p}
+                  ref={newCategoryRef}
+                  value={newCategory}
+                  onChange={(e) => setNewCategory(e.target.value)}
+                  maxLength={CATEGORY_MAX}
+                  autoComplete="off"
+                  placeholder="例：アウトドア用品、子どもの作品"
+                />
+              )}
+            </Field>
+            <Button
+              variant="ghost"
+              className="min-h-11 self-start"
+              onClick={() => {
+                setNewCategory(null);
+                setErrors((er) => ({ ...er, category: undefined }));
+              }}
+            >
+              一覧から選ぶ
+            </Button>
+          </div>
+        )}
       </Card>
 
       <Card tone="soft" className="flex flex-col gap-5">

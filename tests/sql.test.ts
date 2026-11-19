@@ -6,10 +6,9 @@ import { fileURLToPath } from "node:url";
 import { PGlite } from "@electric-sql/pglite";
 import { beforeAll, describe, expect, it } from "vitest";
 
-const migration = readFileSync(
-  fileURLToPath(new URL("../supabase/migrations/0001_init.sql", import.meta.url)),
-  "utf8",
-);
+const migration = ["0001_init.sql", "0002_custom_categories.sql"]
+  .map((f) => readFileSync(fileURLToPath(new URL(`../supabase/migrations/${f}`, import.meta.url)), "utf8"))
+  .join("\n");
 
 const STUBS = `
   create role authenticated nologin;

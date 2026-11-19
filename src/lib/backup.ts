@@ -1,7 +1,7 @@
 // 写真を含むバックアップの書き出し・読み込み。形式と参照関係を検証する。
 
 import { z } from "zod";
-import { AppError, CATEGORIES, type Snapshot } from "./types";
+import { AppError, CATEGORY_MAX, type Snapshot } from "./types";
 
 export const BACKUP_FORMAT = "wagaya-shuno-backup";
 /** 2: マイ辞書を追加。1 の形式も読み込める */
@@ -32,7 +32,7 @@ const storageSchema = z.object({
 const itemSchema = z.object({
   id: z.string().min(1),
   name: z.string().min(1),
-  category: z.enum(CATEGORIES),
+  category: z.string().trim().min(1).max(CATEGORY_MAX),
   storageId: z.string().min(1),
   detail: z.string(),
   memo: z.string(),

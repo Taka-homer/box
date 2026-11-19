@@ -34,7 +34,8 @@ npm run build && npm start   # 本番モード
 
 ### 設定手順
 1. **Supabase のプロジェクトを作る**（https://supabase.com 、無料プランあり。条件は契約前に確認してください）
-2. **SQL を実行する**：Supabase の SQL Editor で `supabase/migrations/0001_init.sql` の内容をすべて貼り付けて実行（何度実行しても安全）
+2. **SQL を実行する**：Supabase の SQL Editor で `supabase/migrations/` の SQL を番号順（`0001_init.sql` → `0002_custom_categories.sql`）にすべて貼り付けて実行（何度実行しても安全）
+   - すでに運用中の場合も、新しく増えた番号の SQL を実行してください
 3. **匿名ログインを有効にする**：Authentication → Sign In / Providers → 「Allow anonymous sign-ins」をオン
 4. **キーを確認する**：Project Settings → API で「Project URL」と「anon（publishable）キー」を控える
    - **service_role キー（secret）は使いません。どこにも貼らないでください。**

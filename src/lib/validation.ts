@@ -1,6 +1,7 @@
 // 入力の検証（端末保存・クラウド保存で共通）
 
-import { AppError, CATEGORIES, type ItemInput } from "./types";
+import { requireCategory } from "./categories";
+import { AppError, type ItemInput } from "./types";
 import { cleanName } from "./text";
 
 export const LIMITS = {
@@ -24,11 +25,11 @@ export function optionalText(value: string, label: string, max: number): string 
 
 export function validateItem(input: ItemInput): ItemInput {
   const name = requireName(input.name, "名前");
-  if (!CATEGORIES.includes(input.category)) throw new AppError("カテゴリを選んでください。");
+  const category = requireCategory(input.category);
   if (!input.storageId) throw new AppError("収納場所を選んでください。");
   return {
     name,
-    category: input.category,
+    category,
     storageId: input.storageId,
     detail: optionalText(input.detail, "詳しい位置", LIMITS.detail),
     memo: optionalText(input.memo, "メモ", LIMITS.memo),

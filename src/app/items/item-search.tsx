@@ -28,16 +28,17 @@ import {
   searchRelated,
   type SearchFilters,
 } from "@/lib/search";
-import { CATEGORIES, errorMessage, type Category, type ItemStatus } from "@/lib/types";
+import { categoryOptions } from "@/lib/categories";
+import { errorMessage, type Category, type ItemStatus } from "@/lib/types";
 
 type Mode = "keyword" | "ai";
 
 function readFilters(params: URLSearchParams): SearchFilters {
-  const category = params.get("category") ?? "";
+  const category = (params.get("category") ?? "").trim();
   const status = params.get("status") ?? "";
   return {
     q: params.get("q") ?? "",
-    category: (CATEGORIES as readonly string[]).includes(category) ? (category as Category) : "",
+    category,
     floorId: params.get("floor") ?? "",
     roomId: params.get("room") ?? "",
     storageId: params.get("storage") ?? "",
@@ -275,7 +276,7 @@ export function ItemSearch() {
                 onChange={(v) => setFilter({ category: v as Category | "" })}
               >
                 <option value="">すべて</option>
-                {CATEGORIES.map((c) => (
+                {categoryOptions(data.items, filters.category).map((c) => (
                   <option key={c} value={c}>
                     {c}
                   </option>
