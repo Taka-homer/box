@@ -169,8 +169,6 @@ export function ItemSearch() {
         description={
           isRecent ? `直近に登録した${RECENT_COUNT}点を表示しています。下から検索もできます。` : "名前・詳しい位置・メモから探せます。"
         }
-        // 淡い背景の画像は、青い帯に重ねると濁るので淡い帯にする
-        tone={title === "探す・一覧" ? "hero" : "soft"}
         art={
           view === "recent" ? (
             <StackedBoxes className="h-[110px] w-auto sm:h-[140px]" />

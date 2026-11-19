@@ -74,7 +74,7 @@ function Wave({ className = "" }: { className?: string }) {
 
 /**
  * ページの見出し。art を渡すと、イラスト付きの帯で表示する。
- * tone="hero" は青い帯（一覧などの主要ページ）、"soft" は淡い帯（入力ページなど）。
+ * tone="hero" はホーム画面と同じ青い帯（既定）、"soft" は淡い帯。
  */
 export function PageHeader({
   title,
@@ -82,7 +82,7 @@ export function PageHeader({
   back,
   actions,
   art,
-  tone = "soft",
+  tone = "hero",
 }: {
   title: string;
   description?: ReactNode;
@@ -113,7 +113,12 @@ export function PageHeader({
               : "border border-white bg-gradient-to-br from-[#f3f9fd] via-[#e6f3fb] to-[#cfe8f6] shadow-sm"
           }`}
         >
-          <div className="pointer-events-none absolute inset-y-0 right-0 flex items-end">{art}</div>
+          {/* 青い帯では、画像を色に重ねる（multiply）と濁るので、ふちのぼかしだけにする */}
+          <div
+            className={`pointer-events-none absolute inset-y-0 right-0 flex items-end ${hero ? "[&_img]:mix-blend-normal" : ""}`}
+          >
+            {art}
+          </div>
           {!hero && <Wave className="bottom-1 text-[#b9ddf1]/50" />}
           <Wave className={hero ? "text-white/20" : "text-white/70"} />
           <div className="relative max-w-[60%] sm:max-w-[65%]">
