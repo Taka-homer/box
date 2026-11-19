@@ -4,10 +4,12 @@ import { useSearchParams } from "next/navigation";
 import { Suspense, useRef, useState } from "react";
 import { useData } from "@/components/data-provider";
 import { ConfirmDialog, Modal } from "@/components/dialog";
-import { EditIcon, PlusIcon, TrashIcon } from "@/components/icons";
+import { BookIcon, EditIcon, PlusIcon, TrashIcon } from "@/components/icons";
+import { FileBox, SpotArt } from "@/components/illustrations";
 import {
   Button,
   Card,
+  CardTitle,
   EmptyState,
   Field,
   LoadError,
@@ -29,6 +31,7 @@ export default function MyWordsPage() {
         title="マイ辞書"
         back={{ href: "/settings", label: "設定" }}
         description="家族の呼び方や言い換えを登録すると、どちらの言葉で検索しても見つかるようになります。"
+        art={<FileBox className="h-[110px] w-auto sm:h-[140px]" />}
       />
       <Suspense fallback={<Loading />}>
         <MyWords />
@@ -96,9 +99,9 @@ function MyWords() {
 
   return (
     <>
-      <Card>
+      <Card tone="soft">
         <form onSubmit={add} noValidate className="flex flex-col gap-4">
-          <h2 className="text-base text-muted">言葉を登録</h2>
+          <CardTitle icon={<PlusIcon size={18} />}>言葉を登録</CardTitle>
           <Field label="同じ意味の言葉" required error={error} help={HELP}>
             {(p) => (
               <TextInput
@@ -131,10 +134,13 @@ function MyWords() {
 
       <section aria-labelledby="words-list">
         <SectionTitle>
-          <span id="words-list">登録した言葉（{data.words.length}組）</span>
+          <span id="words-list" className="flex items-center gap-2 font-bold">
+            <BookIcon size={20} className="shrink-0 text-brand-strong" />
+            登録した言葉（{data.words.length}組）
+          </span>
         </SectionTitle>
         {data.words.length === 0 ? (
-          <EmptyState title="まだ登録がありません">
+          <EmptyState art={<SpotArt name="files" className="h-24 sm:h-28" />} title="まだ登録がありません">
             例：「ボイラー室、機械室」「じいじの部屋、和室」「パパの書斎、仕事部屋」など、家族の呼び方を登録すると便利です。
           </EmptyState>
         ) : (

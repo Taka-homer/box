@@ -3,8 +3,8 @@
 import { useCallback, useEffect, useState } from "react";
 import { useData } from "./data-provider";
 import { ConfirmDialog, Modal } from "./dialog";
-import { CheckIcon, EditIcon, PlusIcon, TrashIcon } from "./icons";
-import { Badge, Button, Card, Field, Notice, SectionTitle, TextInput } from "./ui";
+import { CheckIcon, EditIcon, PlusIcon, TrashIcon, UsersIcon } from "./icons";
+import { Badge, Button, Card, CardTitle, Field, Notice, TextInput } from "./ui";
 import { getSupabase } from "@/lib/cloud/client";
 import {
   DISPLAY_NAME_MAX,
@@ -118,10 +118,8 @@ export function FamilySection({ membership }: { membership: Membership }) {
 
   return (
     <section aria-labelledby="family-title">
-      <SectionTitle>
-        <span id="family-title">家族とメンバー</span>
-      </SectionTitle>
-      <Card className="flex flex-col gap-5">
+      <Card tone="soft" className="flex flex-col gap-5">
+        <CardTitle id="family-title" icon={<UsersIcon size={18} />}>家族とメンバー</CardTitle>
         {message && <Notice kind={message.kind}>{message.text}</Notice>}
 
         <div className="flex flex-wrap items-center justify-between gap-2">

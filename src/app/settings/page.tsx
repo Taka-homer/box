@@ -4,9 +4,9 @@ import { useEffect, useRef, useState } from "react";
 import { useData } from "@/components/data-provider";
 import { ConfirmDialog } from "@/components/dialog";
 import { FamilySection } from "@/components/family-section";
-import { DocIcon, DownloadIcon, SparkIcon, UploadIcon } from "@/components/icons";
+import { BookIcon, DocIcon, DownloadIcon, GridIcon, InfoIcon, SparkIcon, UploadIcon } from "@/components/icons";
 import { FileBox } from "@/components/illustrations";
-import { Button, Card, LinkButton, Notice, PageHeader, SectionTitle } from "@/components/ui";
+import { Button, Card, CardTitle, LinkButton, Notice, PageHeader } from "@/components/ui";
 import { fetchAiStatus } from "@/lib/ai-client";
 import { backupFileName, MAX_BACKUP_BYTES, parseBackup, serializeBackup, type BackupSummary } from "@/lib/backup";
 import { addDemoData, fetchDemoPhoto } from "@/lib/demo";
@@ -117,10 +117,8 @@ export default function SettingsPage() {
       {cloud && <FamilySection membership={cloud} />}
 
       <section aria-labelledby="storage-title">
-        <SectionTitle>
-          <span id="storage-title">データの保存について</span>
-        </SectionTitle>
-        <Card className="flex flex-col gap-2 text-[15px]">
+        <Card tone="soft" className="flex flex-col gap-2 text-[15px]">
+          <CardTitle id="storage-title" icon={<InfoIcon size={18} />}>データの保存について</CardTitle>
           {cloud ? (
             <>
               <p>
@@ -161,10 +159,8 @@ export default function SettingsPage() {
       </section>
 
       <section aria-labelledby="backup-title">
-        <SectionTitle>
-          <span id="backup-title">バックアップ</span>
-        </SectionTitle>
-        <Card className="flex flex-col gap-4">
+        <Card tone="soft" className="flex flex-col gap-4">
+          <CardTitle id="backup-title" icon={<DownloadIcon size={18} />}>バックアップ</CardTitle>
           <p className="text-[15px]">
             写真を含むすべてのデータを1つのファイルに書き出し、あとで読み込んで元に戻せます。
           </p>
@@ -197,10 +193,8 @@ export default function SettingsPage() {
       </section>
 
       <section aria-labelledby="words-title">
-        <SectionTitle>
-          <span id="words-title">マイ辞書</span>
-        </SectionTitle>
-        <Card className="flex flex-col gap-3">
+        <Card tone="soft" className="flex flex-col gap-3">
+          <CardTitle id="words-title" icon={<BookIcon size={18} />}>マイ辞書</CardTitle>
           <p className="text-[15px]">
             「ボイラー室＝機械室」のように、家族の呼び方や言い換えを登録できます。登録すると、どちらの言葉で検索しても見つかります。
           </p>
@@ -213,10 +207,8 @@ export default function SettingsPage() {
       </section>
 
       <section aria-labelledby="demo-title">
-        <SectionTitle>
-          <span id="demo-title">見本データ</span>
-        </SectionTitle>
-        <Card className="flex flex-col gap-3">
+        <Card tone="soft" className="flex flex-col gap-3">
+          <CardTitle id="demo-title" icon={<GridIcon size={18} />}>見本データ</CardTitle>
           <p className="text-[15px]">
             使い方を試すための見本（エアコンの保証書など7件）を追加します。見本には「見本」の表示が付き、何度押しても重複しません。
           </p>
@@ -251,10 +243,8 @@ export default function SettingsPage() {
       </section>
 
       <section aria-labelledby="ai-title">
-        <SectionTitle>
-          <span id="ai-title">AI検索</span>
-        </SectionTitle>
-        <Card className="flex flex-col gap-2 text-[15px]">
+        <Card tone="soft" className="flex flex-col gap-2 text-[15px]">
+          <CardTitle id="ai-title" icon={<SparkIcon size={18} />}>AI検索</CardTitle>
           <p className="flex items-center gap-2">
             <SparkIcon size={20} className="text-brand-strong" />
             {aiAvailable === null

@@ -223,6 +223,14 @@ export const InfoIcon = (p: IconProps) => (
   </Svg>
 );
 
+export const UsersIcon = (p: IconProps) => (
+  <Svg {...p}>
+    <circle cx="9" cy="8.5" r="3" />
+    <path d="M3.5 19a5.5 5.5 0 0 1 11 0" />
+    <path d="M15.5 5.8a3 3 0 0 1 0 5.4M17 14a5.5 5.5 0 0 1 3.5 5" />
+  </Svg>
+);
+
 // ---- 部屋のアイコン ----
 
 export const SofaIcon = (p: IconProps) => (
