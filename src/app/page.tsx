@@ -14,7 +14,7 @@ import {
   PlusIcon,
   SearchIcon,
 } from "@/components/icons";
-import { FileBox, HeroShelf, OpenCarton, SearchBox, SpotArt, StackedBoxes, SteelShelf } from "@/components/illustrations";
+import { HeroShelf, OpenCarton, SearchBox, SpotArt, StackedBoxes, SteelShelf } from "@/components/illustrations";
 import { PhotoView } from "@/components/photo";
 import { Button, Card, EmptyState, LinkButton, LoadError, Loading, Notice } from "@/components/ui";
 import { addDemoData, fetchDemoPhoto } from "@/lib/demo";
@@ -24,7 +24,6 @@ import { errorMessage } from "@/lib/types";
 const MENU = [
   { href: "/items/new", label: "ものを登録", sub: "しまった場所を記録", Icon: PlusIcon, Art: OpenCarton, tone: "bg-[#eef6fb]" },
   { href: "/places", label: "収納場所", sub: "場所ごとに見る", Icon: BoxIcon, Art: SteelShelf, tone: "bg-[#eaf7f3]" },
-  { href: "/items?category=書類", label: "書類", sub: "保証書・説明書など", Icon: DocIcon, Art: FileBox, tone: "bg-[#fdf6e7]" },
   { href: "/items?view=recent", label: "最近の登録", sub: "新しい順に見る", Icon: ClockIcon, Art: StackedBoxes, tone: "bg-[#eef3fb]" },
 ];
 
@@ -172,12 +171,12 @@ export default function HomePage() {
           <GridIcon size={20} className="text-brand-strong" />
           よく使う機能
         </h2>
-        <nav aria-labelledby="menu-title" className="grid grid-cols-2 gap-3">
+        <nav aria-labelledby="menu-title" className="grid grid-cols-2 gap-3 sm:grid-cols-3">
           {MENU.map(({ href, label, sub, Icon, Art, tone }) => (
             <Link
               key={href}
               href={href}
-              className={`relative flex min-h-28 flex-col overflow-hidden rounded-2xl border border-white p-3.5 shadow-sm transition-shadow hover:shadow-md ${tone}`}
+              className={`relative flex min-h-28 flex-col overflow-hidden rounded-2xl border border-white p-3.5 shadow-sm transition-shadow last:col-span-2 hover:shadow-md sm:last:col-span-1 ${tone}`}
             >
               <span className="relative flex items-center gap-1.5 font-semibold text-ink">
                 <Icon size={20} className="shrink-0 text-brand-strong" />

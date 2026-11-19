@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
 import { Suspense, type ReactNode } from "react";
-import { BoxIcon, ClockIcon, DocIcon, GearIcon, HomeIcon, PlusIcon, SearchIcon } from "./icons";
+import { BoxIcon, ClockIcon, GearIcon, HomeIcon, PlusIcon, SearchIcon } from "./icons";
 
 function isActive(pathname: string, href: string) {
   if (href === "/") return pathname === "/";
@@ -19,17 +19,11 @@ const DESKTOP_NAV = [
   { href: "/settings", label: "設定", Icon: GearIcon },
 ];
 
-/** スマホの下部メニュー：ホーム（真ん中）＋ ホーム画面の「よく使う機能」4つ */
+/** スマホの下部メニュー：ものを登録・収納場所・ホーム・最近の登録の4つ */
 const MOBILE_NAV = [
   { href: "/items/new", label: "ものを登録", Icon: PlusIcon, match: (path: string) => path === "/items/new" },
   { href: "/places", label: "収納場所", Icon: BoxIcon, match: (path: string) => isActive(path, "/places") },
   { href: "/", label: "ホーム", Icon: HomeIcon, match: (path: string) => path === "/" },
-  {
-    href: "/items?category=書類",
-    label: "書類",
-    Icon: DocIcon,
-    match: (path: string, q: URLSearchParams) => path === "/items" && q.get("category") === "書類",
-  },
   {
     href: "/items?view=recent",
     label: "最近の登録",
@@ -133,7 +127,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             aria-label="下部メニュー"
             className="safe-bottom fixed inset-x-0 bottom-0 z-30 border-t border-brand-line bg-white/95 backdrop-blur md:hidden"
           >
-            <ul className="mx-auto grid max-w-md grid-cols-5">
+            <ul className="mx-auto grid max-w-md grid-cols-4">
               {MOBILE_NAV.map(({ href, label, Icon, match }) => {
                 const active = match(pathname, params);
                 return (
