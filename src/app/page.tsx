@@ -22,7 +22,8 @@ import { errorMessage } from "@/lib/types";
 
 const MENU = [
   { href: "/items/new", label: "ものを登録", sub: "しまった場所を記録", Icon: PlusIcon, Art: OpenCarton, tone: "bg-[#eef6fb]" },
-  { href: "/places", label: "収納場所", sub: "場所ごとに見る", Icon: BoxIcon, Art: SteelShelf, tone: "bg-[#eaf7f3]" },
+  // 横長の画像なので、ほかより低めに表示する
+  { href: "/places", label: "収納場所", sub: "場所ごとに見る", Icon: BoxIcon, Art: SteelShelf, tone: "bg-[#eaf7f3]", artClass: "h-[56px] sm:h-[72px]" },
   { href: "/items?view=recent", label: "最近の登録", sub: "新しい順に見る", Icon: ClockIcon, Art: StackedBoxes, tone: "bg-[#eef3fb]" },
 ];
 
@@ -170,7 +171,7 @@ export default function HomePage() {
           よく使う機能
         </h2>
         <nav aria-labelledby="menu-title" className="grid grid-cols-2 gap-3 sm:grid-cols-3">
-          {MENU.map(({ href, label, sub, Icon, Art, tone }) => (
+          {MENU.map(({ href, label, sub, Icon, Art, tone, artClass }) => (
             <Link
               key={href}
               href={href}
@@ -181,7 +182,7 @@ export default function HomePage() {
                 {label}
               </span>
               <span className="relative mt-1 max-w-[60%] text-[12px] leading-snug text-body sm:text-[13px]">{sub}</span>
-              <Art className="pointer-events-none absolute bottom-0 right-0 h-[76px] w-auto sm:h-24" />
+              <Art className={`pointer-events-none absolute bottom-0 right-0 w-auto ${artClass ?? "h-[76px] sm:h-24"}`} />
             </Link>
           ))}
         </nav>

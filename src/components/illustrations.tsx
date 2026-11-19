@@ -21,6 +21,19 @@ export function HeroShelf({ className = "" }: Props) {
   );
 }
 
+/**
+ * 「収納場所」ページの帯：タンスとクローゼット。
+ * 横長の画像なので、左右と上の端をぼかして帯の色になじませる。
+ */
+export function ClosetArt({ className = "" }: Props) {
+  return (
+    <Art
+      src="/images/places/closet.webp"
+      className={`[mask-image:linear-gradient(to_right,transparent,black_30%,black_92%,transparent),linear-gradient(to_bottom,transparent,black_18%)] [mask-composite:intersect] ${className}`}
+    />
+  );
+}
+
 /** 「ものを探す」：中身の見える収納ボックス */
 export function SearchBox({ className = "" }: Props) {
   return <Art src="/images/home/search-box.png" className={`rounded-2xl object-cover ${className}`} />;
@@ -36,9 +49,9 @@ export function OpenCarton({ className = "" }: Props) {
   return <Art src="/images/home/open-carton.png" className={`${SOFT_EDGE} ${className}`} />;
 }
 
-/** 「収納場所」：ボックスの入った棚 */
+/** 「収納場所」：タンスとクローゼット（ClosetArt と同じ画像を、淡い色のカード向けに表示する） */
 export function SteelShelf({ className = "" }: Props) {
-  return <Art src="/images/home/shelf.png" className={`${SOFT_EDGE} ${className}`} />;
+  return <Art src="/images/places/closet.webp" className={`${SOFT_EDGE} ${className}`} />;
 }
 
 /** 「書類」：ファイルボックスに立てた書類 */
@@ -53,7 +66,7 @@ export function StackedBoxes({ className = "" }: Props) {
 
 const SPOT_SRC = {
   carton: "/images/home/open-carton.png",
-  shelf: "/images/home/shelf.png",
+  shelf: "/images/places/closet.webp",
   files: "/images/home/file-box.png",
   boxes: "/images/home/stacked-boxes.png",
 } as const;

@@ -91,7 +91,7 @@ function StorageDetail() {
             <span className="break-words">{[floor?.name, room?.name, storage.name].filter(Boolean).join(" → ")}</span>
           </span>
         }
-        art={<SteelShelf className="h-[110px] w-auto sm:h-[140px]" />}
+        art={<SteelShelf className="h-[100px] w-auto sm:h-[140px]" />}
       />
 
       {message && <Notice kind={message.kind}>{message.text}</Notice>}

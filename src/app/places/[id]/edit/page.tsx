@@ -16,7 +16,7 @@ export default function EditStoragePage() {
         title="収納場所を編集"
         back={{ href: `/places/${id}`, label: "収納場所へ戻る" }}
         description={storage ? `「${storage.name}」の名前・場所・写真を変更します。` : undefined}
-        art={<SteelShelf className="h-[110px] w-auto sm:h-[140px]" />}
+        art={<SteelShelf className="h-[100px] w-auto sm:h-[140px]" />}
       />
       {status === "loading" && <Loading />}
       {status === "error" && <LoadError />}

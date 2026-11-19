@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { useData } from "@/components/data-provider";
 import { ChevronRightIcon, LayersIcon, PlusIcon, RoomIcon } from "@/components/icons";
-import { HeroShelf, SpotArt } from "@/components/illustrations";
+import { ClosetArt, SpotArt } from "@/components/illustrations";
 import { PhotoView } from "@/components/photo";
 import { Badge, EmptyState, LinkButton, LoadError, Loading, PageHeader } from "@/components/ui";
 
@@ -23,7 +23,7 @@ export default function PlacesPage() {
         title="収納場所"
         description="部屋ごとに収納場所をまとめています。押すと、その場所にあるものを確認できます。"
         tone="hero"
-        art={<HeroShelf className="h-[124px] w-auto sm:h-[150px]" />}
+        art={<ClosetArt className="h-[100px] w-auto sm:h-[150px]" />}
         actions={
           <>
             <LinkButton href="/places/structure" className="min-h-11">

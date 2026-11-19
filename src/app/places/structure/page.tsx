@@ -45,7 +45,7 @@ export default function StructurePage() {
         title="階と部屋の管理"
         back={{ href: "/places", label: "収納場所" }}
         description="階と部屋の追加・名前の変更・削除ができます。"
-        art={<SteelShelf className="h-[110px] w-auto sm:h-[140px]" />}
+        art={<SteelShelf className="h-[100px] w-auto sm:h-[140px]" />}
         actions={
           <Button variant="primary" onClick={() => setAdding({ kind: "floor" })} className="min-h-11">
             <PlusIcon size={18} />
