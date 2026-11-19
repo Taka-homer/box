@@ -17,6 +17,7 @@ import {
   type StorageInput,
   type WordGroup,
 } from "../types";
+import { checkCategoryRename } from "../categories";
 import { cleanWordGroup, sameWordSet } from "../my-words";
 import { newId, normalizeText } from "../text";
 import { LIMITS, optionalText, requireName, validateItem } from "../validation";
@@ -411,6 +412,20 @@ export class SupabaseRepository implements Repository {
       { storage_id: storageId, detail, status: "normal", last_checked_at: now() },
       "移動先の収納場所が見つかりません。",
     );
+  }
+
+  async renameCategory(from: string, toValue: string): Promise<number> {
+    const to = checkCategoryRename(from, toValue);
+    if (to === from) return 0;
+    const rows = check(
+      await this.sb
+        .from("items")
+        .update({ category: to, updated_at: now() })
+        .eq("household_id", this.householdId)
+        .eq("category", from)
+        .select("id"),
+    );
+    return rows?.length ?? 0;
   }
 
   // ---- マイ辞書 ----

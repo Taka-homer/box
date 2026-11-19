@@ -45,6 +45,11 @@ export interface Repository {
   markFound(id: string): Promise<void>;
   markMissing(id: string): Promise<void>;
   moveItem(id: string, storageId: string, detail: string): Promise<void>;
+  /**
+   * 追加したカテゴリの名前を変更する（そのカテゴリのものすべてを変更）。変更した件数を返す。
+   * 削除は「未分類」への変更として行う。最初から用意しているカテゴリは変更できない。
+   */
+  renameCategory(from: string, to: string): Promise<number>;
 
   /** マイ辞書。入力された言葉を整えて保存する（2語以上が必要） */
   addWordGroup(words: string[]): Promise<WordGroup>;

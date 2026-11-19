@@ -4,10 +4,11 @@ import { useEffect, useRef, useState } from "react";
 import { useData } from "@/components/data-provider";
 import { ConfirmDialog } from "@/components/dialog";
 import { FamilySection } from "@/components/family-section";
-import { BookIcon, DocIcon, DownloadIcon, GridIcon, InfoIcon, SparkIcon, UploadIcon } from "@/components/icons";
+import { BookIcon, DocIcon, DownloadIcon, GridIcon, InfoIcon, SparkIcon, TagIcon, UploadIcon } from "@/components/icons";
 import { FileBox } from "@/components/illustrations";
 import { Button, Card, CardTitle, LinkButton, Notice, PageHeader } from "@/components/ui";
 import { fetchAiStatus } from "@/lib/ai-client";
+import { addedCategories } from "@/lib/categories";
 import { backupFileName, MAX_BACKUP_BYTES, parseBackup, serializeBackup, type BackupSummary } from "@/lib/backup";
 import { addDemoData, fetchDemoPhoto } from "@/lib/demo";
 import { IMAGE_HELP_TEXT } from "@/lib/image";
@@ -202,6 +203,20 @@ export default function SettingsPage() {
           <LinkButton href="/settings/words" className="self-start">
             <DocIcon size={18} />
             マイ辞書を開く
+          </LinkButton>
+        </Card>
+      </section>
+
+      <section aria-labelledby="categories-title">
+        <Card tone="soft" className="flex flex-col gap-3">
+          <CardTitle id="categories-title" icon={<TagIcon size={18} />}>カテゴリ</CardTitle>
+          <p className="text-[15px]">
+            ものの登録時に追加したカテゴリの名前を変更したり、削除したりできます。
+          </p>
+          <p className="text-[13px] text-muted">追加したカテゴリ：{addedCategories(data.items).length}件</p>
+          <LinkButton href="/settings/categories" className="self-start">
+            <TagIcon size={18} />
+            カテゴリの管理を開く
           </LinkButton>
         </Card>
       </section>

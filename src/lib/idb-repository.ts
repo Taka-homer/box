@@ -18,6 +18,7 @@ import {
 } from "./types";
 import { cleanWordGroup, sameWordSet } from "./my-words";
 import { newId, sameName } from "./text";
+import { checkCategoryRename } from "./categories";
 import { LIMITS, optionalText, requireName, validateItem } from "./validation";
 
 export { LIMITS } from "./validation";
@@ -423,6 +424,19 @@ export class IndexedDbRepository implements Repository {
       }
       return { storageId, detail, status: "normal", lastCheckedAt: now() };
     });
+  }
+
+  async renameCategory(from: string, toValue: string): Promise<number> {
+    const to = checkCategoryRename(from, toValue);
+    if (to === from) return 0;
+    const tx = await this.tx();
+    const items = (await tx.objectStore("items").getAll()).filter((i) => i.category === from);
+    const t = now();
+    for (const item of items) {
+      await tx.objectStore("items").put({ ...item, category: to, updatedAt: t });
+    }
+    await tx.done;
+    return items.length;
   }
 
   // ---- マイ辞書 ----

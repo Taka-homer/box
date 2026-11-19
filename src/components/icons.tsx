@@ -223,6 +223,13 @@ export const InfoIcon = (p: IconProps) => (
   </Svg>
 );
 
+export const TagIcon = (p: IconProps) => (
+  <Svg {...p}>
+    <path d="M3.5 12.2V4.5a1 1 0 0 1 1-1h7.7a1 1 0 0 1 .7.3l7.9 7.9a1 1 0 0 1 0 1.4l-7.7 7.7a1 1 0 0 1-1.4 0l-7.9-7.9a1 1 0 0 1-.3-.7Z" />
+    <circle cx="8.3" cy="8.3" r="1.5" />
+  </Svg>
+);
+
 export const UsersIcon = (p: IconProps) => (
   <Svg {...p}>
     <circle cx="9" cy="8.5" r="3" />

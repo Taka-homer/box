@@ -20,6 +20,28 @@ export function categoryOptions(
   return [...builtIn, ...added];
 }
 
+/** 最初から用意しているカテゴリか（変更・削除できない） */
+export function isBuiltInCategory(name: Category): boolean {
+  return CATEGORIES.some((c) => sameName(c, name));
+}
+
+/** 追加したカテゴリと、それぞれのものの数（名前順） */
+export function addedCategories(items: readonly { category: Category }[]): { name: Category; count: number }[] {
+  const counts = new Map<Category, number>();
+  for (const { category } of items) {
+    if (!isBuiltInCategory(category)) counts.set(category, (counts.get(category) ?? 0) + 1);
+  }
+  return [...counts]
+    .map(([name, count]) => ({ name, count }))
+    .sort((a, b) => a.name.localeCompare(b.name, "ja"));
+}
+
+/** カテゴリ名の変更（または削除）を検証し、変更後の名前を返す */
+export function checkCategoryRename(from: Category, to: string): Category {
+  if (isBuiltInCategory(from)) throw new AppError("最初から用意しているカテゴリは変更・削除できません。");
+  return requireCategory(to);
+}
+
 /** カテゴリ名を整えて検証する */
 export function requireCategory(value: string): Category {
   const name = cleanName(value);
