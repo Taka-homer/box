@@ -75,7 +75,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                 })}
                 <Link
                   href="/items/new"
-                  className="ml-2 flex min-h-11 items-center gap-1.5 rounded-lg bg-brand-strong px-3.5 text-[15px] font-medium text-white hover:bg-brand-deep"
+                  className="ml-2 flex min-h-11 items-center gap-1.5 rounded-lg bg-gradient-to-b from-[#36a7cc] to-[#22739b] px-3.5 text-[15px] font-medium text-white shadow-sm hover:from-brand-strong hover:to-brand-deep"
                 >
                   <PlusIcon size={18} />
                   ものを登録

@@ -44,12 +44,15 @@ body {
   letter-spacing: 0.02em;
 }
 
-h1,
-h2,
-h3 {
-  color: var(--color-ink);
-  font-weight: 500;
-  line-height: 1.45;
+/* 見出しの既定。@layer base に入れて、font-bold などの指定で上書きできるようにする */
+@layer base {
+  h1,
+  h2,
+  h3 {
+    color: var(--color-ink);
+    font-weight: 500;
+    line-height: 1.45;
+  }
 }
 
 :focus-visible {

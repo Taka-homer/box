@@ -8,7 +8,7 @@ type Variant = "primary" | "secondary" | "ghost" | "danger";
 
 const VARIANT: Record<Variant, string> = {
   primary:
-    "bg-brand-strong text-white border border-brand-strong hover:bg-brand-deep disabled:bg-brand-line disabled:border-brand-line disabled:text-white",
+    "bg-gradient-to-b from-[#36a7cc] to-[#22739b] text-white border border-transparent shadow-sm hover:from-brand-strong hover:to-brand-deep disabled:bg-none disabled:bg-brand-line disabled:text-white disabled:shadow-none",
   secondary:
     "bg-white text-brand-strong border border-brand hover:bg-brand-soft disabled:text-muted disabled:border-line",
   ghost: "bg-transparent text-brand-strong border border-transparent hover:bg-brand-soft disabled:text-muted",
@@ -40,28 +40,91 @@ export function Card({ className = "", ...rest }: ComponentProps<"div">) {
   return <div className={`rounded-2xl border border-brand-line bg-white p-4 sm:p-5 ${className}`} {...rest} />;
 }
 
+/** 帯の下に敷く白い波（飾り） */
+function Wave({ className = "" }: { className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 400 40"
+      preserveAspectRatio="none"
+      aria-hidden="true"
+      focusable="false"
+      className={`pointer-events-none absolute inset-x-0 bottom-0 h-8 w-full ${className}`}
+    >
+      <path d="M0 26C70 6 150 40 230 24s120-20 170-6v22H0Z" fill="currentColor" />
+    </svg>
+  );
+}
+
+/**
+ * ページの見出し。art を渡すと、イラスト付きの帯で表示する。
+ * tone="hero" は青い帯（一覧などの主要ページ）、"soft" は淡い帯（入力ページなど）。
+ */
 export function PageHeader({
   title,
   description,
   back,
   actions,
+  art,
+  tone = "soft",
 }: {
   title: string;
   description?: ReactNode;
   back?: { href: string; label: string };
   actions?: ReactNode;
+  art?: ReactNode;
+  tone?: "hero" | "soft";
 }) {
+  const backLink = back && (
+    <Link
+      href={back.href}
+      className="-ml-1 mb-2 inline-flex min-h-11 items-center gap-1 rounded-lg px-1 text-sm text-brand-strong hover:underline"
+    >
+      <ChevronLeftIcon size={18} />
+      {back.label}
+    </Link>
+  );
+
+  if (art) {
+    const hero = tone === "hero";
+    return (
+      <div className="mb-5">
+        {backLink}
+        <div
+          className={`relative flex min-h-[124px] items-center overflow-hidden rounded-3xl px-5 py-5 sm:min-h-[150px] sm:px-7 ${
+            hero
+              ? "bg-gradient-to-br from-[#3fa3c8] via-[#56b7d6] to-[#a9def0]"
+              : "border border-white bg-gradient-to-br from-[#f5fafd] to-[#e2f1f9] shadow-sm"
+          }`}
+        >
+          <div className="pointer-events-none absolute inset-y-0 right-0 flex items-end">{art}</div>
+          <Wave className={hero ? "text-white/20" : "text-white/70"} />
+          <div className="relative max-w-[60%] sm:max-w-[65%]">
+            <h1
+              className={`break-words text-2xl font-bold sm:text-[28px] ${
+                hero ? "text-white [text-shadow:0_1px_2px_rgb(0_60_90/0.25)]" : "text-ink"
+              }`}
+            >
+              {title}
+            </h1>
+            {description && (
+              <p
+                className={`mt-1.5 text-[13px] leading-relaxed sm:text-sm ${
+                  hero ? "text-white [text-shadow:0_1px_2px_rgb(0_60_90/0.3)]" : "text-body"
+                }`}
+              >
+                {description}
+              </p>
+            )}
+          </div>
+        </div>
+        {actions && <div className="mt-4 flex flex-wrap gap-2 [&>*]:flex-1 [&>*]:whitespace-nowrap">{actions}</div>}
+      </div>
+    );
+  }
+
   return (
     <div className="mb-5">
-      {back && (
-        <Link
-          href={back.href}
-          className="-ml-1 mb-2 inline-flex min-h-11 items-center gap-1 rounded-lg px-1 text-sm text-brand-strong hover:underline"
-        >
-          <ChevronLeftIcon size={18} />
-          {back.label}
-        </Link>
-      )}
+      {backLink}
       <div className="flex flex-wrap items-end justify-between gap-3">
         <div className="min-w-0">
           <h1 className="text-[22px] sm:text-2xl break-words">{title}</h1>
@@ -177,17 +240,31 @@ export function Notice({
   );
 }
 
+/** 登録がないときの案内。art を渡すとイラスト付きのカードで表示する */
 export function EmptyState({
   icon,
+  art,
   title,
   children,
   action,
 }: {
   icon?: ReactNode;
+  art?: ReactNode;
   title: string;
   children?: ReactNode;
   action?: ReactNode;
 }) {
+  if (art) {
+    return (
+      <div className="relative flex flex-col items-center overflow-hidden rounded-3xl border border-white bg-gradient-to-b from-[#f5fafd] to-[#e2f1f9] px-5 pb-10 pt-6 text-center shadow-sm">
+        <div className="mb-2">{art}</div>
+        <p className="text-lg font-bold text-ink sm:text-xl">{title}</p>
+        {children && <div className="relative mt-1.5 text-sm text-body">{children}</div>}
+        {action && <div className="relative mt-5 flex flex-wrap justify-center gap-2">{action}</div>}
+        <Wave className="text-white/70" />
+      </div>
+    );
+  }
   return (
     <div className="flex flex-col items-center rounded-2xl border border-dashed border-brand-line bg-brand-softer px-5 py-8 text-center">
       {icon && <div className="mb-3 text-brand">{icon}</div>}

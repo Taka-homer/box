@@ -5,6 +5,7 @@ import { useData } from "@/components/data-provider";
 import { ConfirmDialog } from "@/components/dialog";
 import { FamilySection } from "@/components/family-section";
 import { DocIcon, DownloadIcon, SparkIcon, UploadIcon } from "@/components/icons";
+import { FileBox } from "@/components/illustrations";
 import { Button, Card, LinkButton, Notice, PageHeader, SectionTitle } from "@/components/ui";
 import { fetchAiStatus } from "@/lib/ai-client";
 import { backupFileName, MAX_BACKUP_BYTES, parseBackup, serializeBackup, type BackupSummary } from "@/lib/backup";
@@ -106,7 +107,12 @@ export default function SettingsPage() {
 
   return (
     <div className="mx-auto flex max-w-2xl flex-col gap-6">
-      <PageHeader title="設定" back={{ href: "/", label: "ホーム" }} />
+      <PageHeader
+        title="設定"
+        back={{ href: "/", label: "ホーム" }}
+        description="データの保存・バックアップ・マイ辞書・見本データなどを設定します。"
+        art={<FileBox className="h-[110px] w-auto sm:h-[140px]" />}
+      />
 
       {cloud && <FamilySection membership={cloud} />}
 

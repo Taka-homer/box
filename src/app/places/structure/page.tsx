@@ -3,7 +3,8 @@
 import { useRef, useState } from "react";
 import { useData } from "@/components/data-provider";
 import { ConfirmDialog, Modal } from "@/components/dialog";
-import { EditIcon, PlusIcon, TrashIcon } from "@/components/icons";
+import { EditIcon, PlusIcon, RoomIcon, TrashIcon } from "@/components/icons";
+import { SteelShelf } from "@/components/illustrations";
 import { Button, Card, Field, LoadError, Loading, Notice, PageHeader, TextInput } from "@/components/ui";
 import { errorMessage } from "@/lib/types";
 
@@ -44,6 +45,7 @@ export default function StructurePage() {
         title="階と部屋の管理"
         back={{ href: "/places", label: "収納場所" }}
         description="階と部屋の追加・名前の変更・削除ができます。"
+        art={<SteelShelf className="h-[110px] w-auto sm:h-[140px]" />}
         actions={
           <Button variant="primary" onClick={() => setAdding({ kind: "floor" })} className="min-h-11">
             <PlusIcon size={18} />
@@ -66,9 +68,9 @@ export default function StructurePage() {
         data.floors.map((floor) => {
           const rooms = data.rooms.filter((r) => r.floorId === floor.id);
           return (
-            <Card key={floor.id} className="flex flex-col gap-3">
+            <Card key={floor.id} className="flex flex-col gap-3 border-white bg-gradient-to-br from-[#f5fafd] to-[#e9f4fa] shadow-sm">
               <div className="flex items-center justify-between gap-2">
-                <h2 className="min-w-0 flex-1 break-words text-lg">{floor.name}</h2>
+                <h2 className="min-w-0 flex-1 break-words text-xl font-bold">{floor.name}</h2>
                 <RowActions
                   label={floor.name}
                   busy={busy}
@@ -79,13 +81,16 @@ export default function StructurePage() {
               {rooms.length === 0 ? (
                 <p className="text-sm text-muted">部屋がまだありません。</p>
               ) : (
-                <ul className="flex flex-col divide-y divide-line rounded-xl border border-line">
+                <ul className="flex flex-col divide-y divide-line rounded-xl border border-brand-line bg-white">
                   {rooms.map((room) => {
                     const storageCount = data.storages.filter((s) => s.roomId === room.id).length;
                     return (
                       <li key={room.id} className="flex items-center justify-between gap-2 px-3 py-2">
+                        <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-brand-line bg-brand-softer text-brand-strong">
+                          <RoomIcon name={room.name} size={22} />
+                        </span>
                         <div className="min-w-0 flex-1">
-                          <p className="break-words text-ink">{room.name}</p>
+                          <p className="break-words font-medium text-ink">{room.name}</p>
                           <p className="text-[13px] text-muted">収納場所 {storageCount}件</p>
                         </div>
                         <RowActions

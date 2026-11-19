@@ -222,3 +222,79 @@ export const InfoIcon = (p: IconProps) => (
     <circle cx="12" cy="7.8" r=".5" />
   </Svg>
 );
+
+// ---- 部屋のアイコン ----
+
+export const SofaIcon = (p: IconProps) => (
+  <Svg {...p}>
+    <path d="M5.5 11V8.5a2.5 2.5 0 0 1 2.5-2.5h8a2.5 2.5 0 0 1 2.5 2.5V11" />
+    <path d="M3.5 12.5a1.5 1.5 0 0 1 3 0V14h11v-1.5a1.5 1.5 0 0 1 3 0V17a1 1 0 0 1-1 1h-15a1 1 0 0 1-1-1Z" />
+    <path d="M6 18v1.5M18 18v1.5" />
+  </Svg>
+);
+
+export const HangerIcon = (p: IconProps) => (
+  <Svg {...p}>
+    <path d="M10 7.5a2 2 0 1 1 2.8 1.8c-.5.2-.8.7-.8 1.2V11" />
+    <path d="M12 11 3.6 16.6a.8.8 0 0 0 .4 1.4h16a.8.8 0 0 0 .4-1.4Z" />
+  </Svg>
+);
+
+export const ToiletIcon = (p: IconProps) => (
+  <Svg {...p}>
+    <path d="M7 4h10v6H7Z" />
+    <path d="M6 10h12v1.5a6 6 0 0 1-3.5 5.5l.5 3H9l.5-3A6 6 0 0 1 6 11.5Z" />
+  </Svg>
+);
+
+export const SinkIcon = (p: IconProps) => (
+  <Svg {...p}>
+    <path d="M3.5 12h17a8.5 6.5 0 0 1-17 0Z" />
+    <path d="M12 12V6.5a2 2 0 0 1 4 0" />
+    <path d="M9 18.5 8 20.5M15 18.5l1 2" />
+  </Svg>
+);
+
+export const BedIcon = (p: IconProps) => (
+  <Svg {...p}>
+    <path d="M3.5 6v13M3.5 15h17v4M20.5 15v-2.5A2.5 2.5 0 0 0 18 10h-7v5" />
+    <circle cx="7.5" cy="11.5" r="1.8" />
+  </Svg>
+);
+
+export const PotIcon = (p: IconProps) => (
+  <Svg {...p}>
+    <path d="M5 10h14v6.5a3 3 0 0 1-3 3H8a3 3 0 0 1-3-3Z" />
+    <path d="M3 10h18M10 7h4M12 7V5.5" />
+  </Svg>
+);
+
+export const BookIcon = (p: IconProps) => (
+  <Svg {...p}>
+    <path d="M5 5.5A1.5 1.5 0 0 1 6.5 4H19v13H6.5A1.5 1.5 0 0 0 5 18.5Z" />
+    <path d="M5 18.5A1.5 1.5 0 0 0 6.5 20H19v-3M9 8h6" />
+  </Svg>
+);
+
+export const DoorIcon = (p: IconProps) => (
+  <Svg {...p}>
+    <path d="M6 20V5a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v15M4 20h16" />
+    <path d="M14.5 12.5v.5" />
+  </Svg>
+);
+
+const ROOM_ICONS: [RegExp, (p: IconProps) => React.ReactElement][] = [
+  [/リビング|居間|ダイニング|和室/, SofaIcon],
+  [/クローゼット|押し?入れ?|衣装|納戸|物置|倉庫/, HangerIcon],
+  [/トイレ|便所/, ToiletIcon],
+  [/洗面|浴室|風呂|脱衣|バス/, SinkIcon],
+  [/寝室|ベッド|子ども部屋|子供部屋/, BedIcon],
+  [/キッチン|台所|パントリー/, PotIcon],
+  [/書斎|勉強|仕事|本/, BookIcon],
+];
+
+/** 部屋の名前に合ったアイコン。当てはまらなければドア */
+export function RoomIcon({ name, ...p }: IconProps & { name: string }) {
+  const Icon = ROOM_ICONS.find(([re]) => re.test(name))?.[1] ?? DoorIcon;
+  return <Icon {...p} />;
+}

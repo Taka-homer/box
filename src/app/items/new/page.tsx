@@ -4,6 +4,7 @@ import { useSearchParams } from "next/navigation";
 import { Suspense } from "react";
 import { useData } from "@/components/data-provider";
 import { ItemForm } from "@/components/item-form";
+import { OpenCarton } from "@/components/illustrations";
 import { LoadError, Loading, PageHeader } from "@/components/ui";
 
 function NewItem() {
@@ -21,6 +22,7 @@ export default function NewItemPage() {
         title="ものを登録"
         back={{ href: "/", label: "ホーム" }}
         description="名前と、しまった場所を登録します。写真はなくても大丈夫です。"
+        art={<OpenCarton className="h-[110px] w-auto sm:h-[140px]" />}
       />
       <Suspense fallback={<Loading />}>
         <NewItem />

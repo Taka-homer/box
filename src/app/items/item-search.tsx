@@ -4,7 +4,8 @@ import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useData } from "@/components/data-provider";
-import { BoxIcon, CloseIcon, PlusIcon, SearchIcon, SparkIcon } from "@/components/icons";
+import { CloseIcon, GridIcon, PlusIcon, SearchIcon, SparkIcon } from "@/components/icons";
+import { FileBox, SearchBox, SpotArt, StackedBoxes } from "@/components/illustrations";
 import { ItemCard } from "@/components/item-card";
 import {
   Button,
@@ -155,6 +156,17 @@ export function ItemSearch() {
         title={title}
         back={{ href: "/", label: "ホーム" }}
         description={view === "recent" ? "新しく登録した順に表示しています。" : "名前・詳しい位置・メモから探せます。"}
+        // 淡い背景の画像は、青い帯に重ねると濁るので淡い帯にする
+        tone={title === "探す・一覧" ? "hero" : "soft"}
+        art={
+          view === "recent" ? (
+            <StackedBoxes className="h-[110px] w-auto sm:h-[140px]" />
+          ) : title === "書類" ? (
+            <FileBox className="h-[110px] w-auto sm:h-[140px]" />
+          ) : (
+            <SearchBox className="my-auto mr-4 h-[88px] w-auto shadow-md sm:h-[112px]" />
+          )
+        }
       />
 
       {aiAvailable && (
@@ -194,9 +206,10 @@ export function ItemSearch() {
         }}
         className="flex flex-col gap-2"
       >
-        <label htmlFor="item-search" className="text-[15px] font-medium text-ink">
+        <label htmlFor="item-search" className="flex flex-wrap items-center gap-x-2 text-base font-bold text-ink">
+          <GridIcon size={20} className="shrink-0 text-brand-strong" />
           {mode === "ai" ? "用途や特徴を入力" : "名前や特徴で検索"}
-          <span className="ml-2 rounded-md bg-brand-soft px-1.5 py-0.5 text-xs font-normal text-brand-strong">
+          <span className="rounded-full bg-brand-soft px-2.5 py-0.5 text-xs font-normal text-brand-strong">
             {mode === "ai" ? "AI検索" : "通常検索"}
           </span>
         </label>
@@ -322,7 +335,7 @@ export function ItemSearch() {
         <section aria-label="検索結果" aria-live="polite">
           {data.items.length === 0 ? (
             <EmptyState
-              icon={<BoxIcon size={32} />}
+              art={<SpotArt name="carton" />}
               title="まだ何も登録されていません"
               action={
                 <LinkButton href="/items/new" variant="primary">

@@ -14,7 +14,7 @@ import {
   PlusIcon,
   SearchIcon,
 } from "@/components/icons";
-import { FileBox, HeroShelf, OpenCarton, SearchBox, StackedBoxes, SteelShelf } from "@/components/illustrations";
+import { FileBox, HeroShelf, OpenCarton, SearchBox, SpotArt, StackedBoxes, SteelShelf } from "@/components/illustrations";
 import { PhotoView } from "@/components/photo";
 import { Button, Card, EmptyState, LinkButton, LoadError, Loading, Notice } from "@/components/ui";
 import { addDemoData, fetchDemoPhoto } from "@/lib/demo";
@@ -217,7 +217,7 @@ export default function HomePage() {
           </div>
           {recent.length === 0 ? (
             <EmptyState
-              icon={<BoxIcon size={32} />}
+              art={<SpotArt name="carton" className="h-24 sm:h-28" />}
               title="まだ登録がありません"
               action={
                 <LinkButton href="/items/new" variant="primary">

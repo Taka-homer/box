@@ -50,3 +50,20 @@ export function FileBox({ className = "" }: Props) {
 export function StackedBoxes({ className = "" }: Props) {
   return <Art src="/images/home/stacked-boxes.png" className={`${SOFT_EDGE} ${className}`} />;
 }
+
+const SPOT_SRC = {
+  carton: "/images/home/open-carton.png",
+  shelf: "/images/home/shelf.png",
+  files: "/images/home/file-box.png",
+  boxes: "/images/home/stacked-boxes.png",
+} as const;
+
+/** 「まだ登録がない」案内の中央に置くイラスト。四方のふちをぼかす */
+export function SpotArt({ name, className = "" }: { name: keyof typeof SPOT_SRC; className?: string }) {
+  return (
+    <Art
+      src={SPOT_SRC[name]}
+      className={`h-32 w-auto mix-blend-multiply [mask-image:radial-gradient(closest-side,black_72%,transparent)] sm:h-36 ${className}`}
+    />
+  );
+}

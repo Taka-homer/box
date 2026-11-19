@@ -4,7 +4,8 @@ import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { Suspense, useMemo, useState } from "react";
 import { useData } from "@/components/data-provider";
 import { ConfirmDialog, Modal } from "@/components/dialog";
-import { BoxIcon, EditIcon, PinIcon, PlusIcon, TrashIcon } from "@/components/icons";
+import { EditIcon, PinIcon, PlusIcon, TrashIcon } from "@/components/icons";
+import { SpotArt } from "@/components/illustrations";
 import { ItemCard } from "@/components/item-card";
 import { EMPTY_LOCATION, LocationPicker } from "@/components/location-picker";
 import { PhotoView } from "@/components/photo";
@@ -128,7 +129,7 @@ function StorageDetail() {
             <span id="storage-items">ここにあるもの（{views.length}点）</span>
           </SectionTitle>
           {views.length === 0 ? (
-            <EmptyState icon={<BoxIcon size={32} />} title="まだ何も登録されていません" />
+            <EmptyState art={<SpotArt name="carton" className="h-24 sm:h-28" />} title="まだ何も登録されていません" />
           ) : (
             <ul className="flex flex-col gap-2.5">
               {views.map((v) => (

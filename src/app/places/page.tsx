@@ -3,7 +3,8 @@
 import Link from "next/link";
 import { useState } from "react";
 import { useData } from "@/components/data-provider";
-import { BoxIcon, ChevronRightIcon, LayersIcon, PlusIcon } from "@/components/icons";
+import { ChevronRightIcon, LayersIcon, PlusIcon, RoomIcon } from "@/components/icons";
+import { HeroShelf, SpotArt } from "@/components/illustrations";
 import { PhotoView } from "@/components/photo";
 import { Badge, EmptyState, LinkButton, LoadError, Loading, PageHeader } from "@/components/ui";
 
@@ -21,6 +22,8 @@ export default function PlacesPage() {
       <PageHeader
         title="収納場所"
         description="部屋ごとに収納場所をまとめています。押すと、その場所にあるものを確認できます。"
+        tone="hero"
+        art={<HeroShelf className="h-[124px] w-auto sm:h-[150px]" />}
         actions={
           <>
             <LinkButton href="/places/structure" className="min-h-11">
@@ -40,7 +43,7 @@ export default function PlacesPage() {
 
       {status === "ready" && data.floors.length === 0 && (
         <EmptyState
-          icon={<LayersIcon size={32} />}
+          art={<SpotArt name="shelf" />}
           title="まだ家の場所が登録されていません"
           action={
             <LinkButton href="/places/structure" variant="primary">
@@ -63,8 +66,10 @@ export default function PlacesPage() {
                   type="button"
                   aria-pressed={active}
                   onClick={() => setFloorFilter(f.id)}
-                  className={`min-h-11 shrink-0 rounded-full border px-4 text-[15px] ${
-                    active ? "border-brand-strong bg-brand-strong text-white" : "border-brand-line bg-white text-body hover:bg-brand-softer"
+                  className={`min-h-11 shrink-0 rounded-full border px-5 text-[15px] transition-colors ${
+                    active
+                      ? "border-transparent bg-gradient-to-b from-[#36a7cc] to-[#22739b] font-medium text-white shadow-sm"
+                      : "border-brand-line bg-white text-body hover:bg-brand-softer"
                   }`}
                 >
                   {f.name}
@@ -77,7 +82,7 @@ export default function PlacesPage() {
             const rooms = data.rooms.filter((r) => r.floorId === floor.id);
             return (
               <section key={floor.id} aria-labelledby={`floor-${floor.id}`} className="flex flex-col gap-4">
-                <h2 id={`floor-${floor.id}`} className="border-b border-brand-line pb-1.5 text-lg">
+                <h2 id={`floor-${floor.id}`} className="border-b border-brand-line pb-2 text-xl font-bold">
                   {floor.name}
                 </h2>
                 {rooms.length === 0 && (
@@ -91,19 +96,28 @@ export default function PlacesPage() {
                 {rooms.map((room) => {
                   const storages = data.storages.filter((s) => s.roomId === room.id);
                   return (
-                    <div key={room.id} className="flex flex-col gap-2">
+                    <div
+                      key={room.id}
+                      className="flex flex-col gap-2.5 rounded-2xl border border-white bg-gradient-to-br from-[#f5fafd] to-[#e9f4fa] p-3 shadow-sm sm:p-4"
+                    >
                       <div className="flex items-center justify-between gap-2">
-                        <h3 className="text-base">{room.name}</h3>
+                        <h3 className="flex min-w-0 items-center gap-2.5 text-base font-bold">
+                          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-brand-line bg-white text-brand-strong shadow-sm">
+                            <RoomIcon name={room.name} size={24} />
+                          </span>
+                          <span className="break-words">{room.name}</span>
+                        </h3>
                         <Link
                           href={`/places/new?room=${room.id}`}
-                          className="inline-flex min-h-11 items-center gap-1 text-sm text-brand-strong hover:underline"
+                          aria-label={`${room.name}に収納場所を追加`}
+                          className="inline-flex min-h-11 shrink-0 items-center gap-1 border-l border-brand-line pl-3 text-sm font-medium text-brand-strong hover:underline"
                         >
                           <PlusIcon size={16} />
                           追加
                         </Link>
                       </div>
                       {storages.length === 0 ? (
-                        <p className="rounded-xl border border-dashed border-brand-line px-4 py-3 text-sm text-muted">
+                        <p className="rounded-xl border border-dashed border-brand-line bg-white/60 px-4 py-3 text-center text-sm text-muted">
                           収納場所がまだありません。
                         </p>
                       ) : (
@@ -112,7 +126,7 @@ export default function PlacesPage() {
                             <li key={s.id}>
                               <Link
                                 href={`/places/${s.id}`}
-                                className="flex items-center gap-3 rounded-2xl border border-brand-line bg-white p-3 transition-colors hover:border-brand hover:bg-brand-softer"
+                                className="flex items-center gap-3 rounded-2xl border border-brand-line bg-white p-3 shadow-sm transition-colors hover:border-brand hover:bg-brand-softer"
                               >
                                 <PhotoView
                                   photoId={s.photoId}
@@ -140,7 +154,7 @@ export default function PlacesPage() {
             );
           })}
           {data.storages.length === 0 && (
-            <EmptyState icon={<BoxIcon size={32} />} title="収納場所を登録しましょう">
+            <EmptyState art={<SpotArt name="boxes" />} title="収納場所を登録しましょう">
               「本棚」「押し入れ上段」など、ものをしまう場所を登録します。
             </EmptyState>
           )}
