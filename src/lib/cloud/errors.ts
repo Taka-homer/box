@@ -22,6 +22,34 @@ const RPC_MESSAGES: Record<string, string> = {
 };
 
 /**
+ * データベースの値の制約（check 制約）に違反したときのメッセージ。制約名で引く。
+ * 画面側でも同じ検証をしているため、ここに来るのは主にデータベースの設定が古い場合。
+ */
+const CHECK_MESSAGES: Record<string, string> = {
+  items_category_check:
+    "新しいカテゴリ名を受け付けられませんでした。カテゴリ名は1〜20文字にしてください。" +
+    "文字数に問題がない場合は、データベースの設定が古い可能性があります。" +
+    "管理者に、設定手順の SQL（0002_custom_categories.sql）を実行済みか確認してもらってください。",
+  items_name_check: "名前は1〜60文字で入力してください。",
+  floors_name_check: "階の名前は1〜60文字で入力してください。",
+  rooms_name_check: "部屋の名前は1〜60文字で入力してください。",
+  storages_name_check: "収納場所の名前は1〜60文字で入力してください。",
+  items_detail_check: "詳しい位置は200文字以内で入力してください。",
+  items_memo_check: "メモは1000文字以内で入力してください。",
+  households_name_check: "家族の名前は1〜40文字で入力してください。",
+  members_display_name_check: "表示名は1〜30文字で入力してください。",
+  word_groups_words_check: "マイ辞書は、同じ意味の言葉を2〜10個で登録してください。",
+};
+
+const CHECK_FALLBACK = "入力内容をデータベースが受け付けませんでした。文字数などを確認してください。";
+
+/** check 制約の違反（23514）を、制約名に応じた日本語のエラーにする */
+function checkViolation(message: string): AppError {
+  const name = message.match(/check constraint "([^"]+)"/)?.[1] ?? "";
+  return new AppError(CHECK_MESSAGES[name] ?? CHECK_FALLBACK, "validation");
+}
+
+/**
  * @param duplicate 重複したときのメッセージ
  * @param hasChildren 中身があって削除できないときのメッセージ
  */
@@ -39,6 +67,7 @@ export function toAppError(
     }
   }
   if (e.code === "23505") return new AppError(messages.duplicate ?? "同じ名前がすでにあります。", "duplicate");
+  if (e.code === "23514") return checkViolation(message);
   if (e.code === "23503") {
     return new AppError(
       messages.hasChildren ?? "ほかのデータから使われているため、この操作はできません。",

@@ -37,6 +37,12 @@ describe("エラーの表示", () => {
     expect(toAppError({ message: "target_not_found" }).message).toMatch(/移動先/);
     expect(toAppError({ message: "invite_not_found" }).message).toMatch(/招待コードが正しくありません/);
     expect(toAppError(new TypeError("Failed to fetch")).message).toMatch(/通信できません/);
+    const check = (name: string) =>
+      toAppError({ code: "23514", message: `new row for relation "items" violates check constraint "${name}"` });
+    expect(check("items_category_check").message).toMatch(/0002_custom_categories\.sql/);
+    expect(check("items_memo_check").message).toBe("メモは1000文字以内で入力してください。");
+    expect(check("unknown_check").message).toMatch(/文字数などを確認/);
+    expect(check("items_category_check").code).toBe("validation");
     const original = new AppError("そのまま");
     expect(toAppError(original)).toBe(original);
   });
