@@ -21,10 +21,10 @@ import { buildLookup, resolveItem } from "@/lib/search";
 import { errorMessage } from "@/lib/types";
 
 const MENU = [
-  { href: "/items/new", label: "ものを登録", sub: "しまった場所を記録", Icon: PlusIcon, Art: OpenCarton, tone: "bg-[#eef6fb]", artClass: "h-[64px] sm:h-[80px]" },
+  { href: "/items/new", label: "ものを登録", sub: "しまった場所を記録", Icon: PlusIcon, Art: OpenCarton, tone: "border-[#b9dcef] bg-[#eef6fb]", artClass: "h-[64px] sm:h-[80px]" },
   // 横長の画像なので、ほかより低めに表示する
-  { href: "/places", label: "収納場所", sub: "場所ごとに見る", Icon: BoxIcon, Art: SteelShelf, tone: "bg-[#eaf7f3]", artClass: "h-[56px] sm:h-[72px]" },
-  { href: "/items?view=recent", label: "最近の登録", sub: "新しい順に見る", Icon: ClockIcon, Art: RecentArt, tone: "bg-[#eef3fb]" },
+  { href: "/places", label: "収納場所", sub: "場所ごとに見る", Icon: BoxIcon, Art: SteelShelf, tone: "border-[#b5e0cf] bg-[#eaf7f3]", artClass: "h-[56px] sm:h-[72px]" },
+  { href: "/items?view=recent", label: "最近の登録", sub: "新しい順に見る", Icon: ClockIcon, Art: RecentArt, tone: "border-[#c8d5ef] bg-[#eef3fb]" },
 ];
 
 export default function HomePage() {
@@ -170,12 +170,12 @@ export default function HomePage() {
           <GridIcon size={20} className="text-brand-strong" />
           よく使う機能
         </h2>
-        <nav aria-labelledby="menu-title" className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+        <nav aria-labelledby="menu-title" className="grid grid-cols-2 gap-3.5 sm:grid-cols-3 sm:gap-4">
           {MENU.map(({ href, label, sub, Icon, Art, tone, artClass }) => (
             <Link
               key={href}
               href={href}
-              className={`relative flex min-h-28 flex-col overflow-hidden rounded-2xl border border-white p-3.5 shadow-sm transition-shadow last:col-span-2 hover:shadow-md sm:last:col-span-1 ${tone}`}
+              className={`relative flex min-h-28 flex-col overflow-hidden rounded-2xl border-[1.5px] p-3.5 shadow-[0_3px_10px_rgb(42_115_153/0.14)] transition-shadow last:col-span-2 hover:shadow-[0_6px_16px_rgb(42_115_153/0.2)] sm:last:col-span-1 ${tone}`}
             >
               <span className="relative flex items-center gap-1.5 font-semibold text-ink">
                 <Icon size={20} className="shrink-0 text-brand-strong" />
