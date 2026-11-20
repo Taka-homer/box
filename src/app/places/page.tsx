@@ -21,6 +21,7 @@ export default function PlacesPage() {
     <div className="flex flex-col gap-5">
       <PageHeader
         title="収納場所"
+        back={{ href: "/", label: "ホーム" }}
         description="部屋ごとに収納場所をまとめています。押すと、その場所にあるものを確認できます。"
         tone="hero"
         art={<ClosetArt className="h-[100px] w-auto sm:h-[150px]" />}
