@@ -144,7 +144,7 @@ export function ItemForm({ item, initialStorageId }: { item?: Item; initialStora
 
       <Card tone="soft" className="flex flex-col gap-5">
         <CardTitle icon={<BoxIcon size={18} />}>もの・書類</CardTitle>
-        <Field label="名前" required error={errors.name} help="例：エアコンの保証書、電動ドライバー">
+        <Field label="名前" required error={errors.name} help="例：エアコンの保証書、マフラー">
           {(p) => (
             <TextInput
               {...p}
