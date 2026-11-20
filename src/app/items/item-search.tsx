@@ -254,7 +254,7 @@ export function ItemSearch() {
                 setText(e.target.value);
                 if (mode === "keyword" && e.target.value === "") apply({ ...filters, q: "" });
               }}
-              placeholder={mode === "ai" ? "例：冷房の修理に必要な書類" : "例：保証書、ドライバー"}
+              placeholder={mode === "ai" ? "例：冷房の修理に必要な書類" : "例：保証書、マフラー"}
               enterKeyHint="search"
               className={`${inputClass} pl-11`}
               aria-describedby="search-mode-help"
