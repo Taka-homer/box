@@ -5,7 +5,7 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useData } from "@/components/data-provider";
 import { ChevronRightIcon, ClockIcon, CloseIcon, GridIcon, PlusIcon, SearchIcon, SparkIcon } from "@/components/icons";
-import { FileBox, SearchBox, SpotArt, StackedBoxes } from "@/components/illustrations";
+import { FileBox, RecentArt, SearchBox, SpotArt } from "@/components/illustrations";
 import { ItemCard } from "@/components/item-card";
 import {
   Button,
@@ -171,7 +171,7 @@ export function ItemSearch() {
         }
         art={
           view === "recent" ? (
-            <StackedBoxes className="h-[110px] w-auto sm:h-[140px]" />
+            <RecentArt className="h-[100px] w-auto sm:h-[140px]" />
           ) : title === "書類" ? (
             <FileBox className="h-[110px] w-auto sm:h-[140px]" />
           ) : (

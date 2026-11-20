@@ -59,7 +59,12 @@ export function FileBox({ className = "" }: Props) {
   return <Art src="/images/home/file-box.png" className={`${SOFT_EDGE} ${className}`} />;
 }
 
-/** 「最近の登録」：積み重ねた箱 */
+/** 「最近の登録」：収納ボックスと書類の写真 */
+export function RecentArt({ className = "" }: Props) {
+  return <Art src="/images/items/recent-files.webp" className={`${SOFT_EDGE} ${className}`} />;
+}
+
+/** 積み重ねた箱（収納場所の追加・カテゴリの管理など） */
 export function StackedBoxes({ className = "" }: Props) {
   return <Art src="/images/home/stacked-boxes.png" className={`${SOFT_EDGE} ${className}`} />;
 }

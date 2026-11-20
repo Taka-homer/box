@@ -13,7 +13,7 @@ import {
   PlusIcon,
   SearchIcon,
 } from "@/components/icons";
-import { HeroShelf, OpenCarton, SearchBox, SpotArt, StackedBoxes, SteelShelf } from "@/components/illustrations";
+import { HeroShelf, OpenCarton, RecentArt, SearchBox, SpotArt, SteelShelf } from "@/components/illustrations";
 import { PhotoView } from "@/components/photo";
 import { Button, Card, EmptyState, LinkButton, LoadError, Loading, Notice } from "@/components/ui";
 import { addDemoData, fetchDemoPhoto } from "@/lib/demo";
@@ -24,7 +24,7 @@ const MENU = [
   { href: "/items/new", label: "ものを登録", sub: "しまった場所を記録", Icon: PlusIcon, Art: OpenCarton, tone: "bg-[#eef6fb]", artClass: "h-[64px] sm:h-[80px]" },
   // 横長の画像なので、ほかより低めに表示する
   { href: "/places", label: "収納場所", sub: "場所ごとに見る", Icon: BoxIcon, Art: SteelShelf, tone: "bg-[#eaf7f3]", artClass: "h-[56px] sm:h-[72px]" },
-  { href: "/items?view=recent", label: "最近の登録", sub: "新しい順に見る", Icon: ClockIcon, Art: StackedBoxes, tone: "bg-[#eef3fb]" },
+  { href: "/items?view=recent", label: "最近の登録", sub: "新しい順に見る", Icon: ClockIcon, Art: RecentArt, tone: "bg-[#eef3fb]" },
 ];
 
 export default function HomePage() {
