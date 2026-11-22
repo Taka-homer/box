@@ -33,7 +33,7 @@ import { errorMessage, type Category, type ItemStatus } from "@/lib/types";
 
 type Mode = "keyword" | "ai";
 
-/** 「最近の登録」で一番上に表示する件数 */
+/** 「登録履歴」で一番上に表示する件数 */
 const RECENT_COUNT = 5;
 
 function readFilters(params: URLSearchParams): SearchFilters {
@@ -63,7 +63,7 @@ function toQuery(f: SearchFilters, view: string | null): string {
 }
 
 /**
- * 「探す」と「最近の登録」は同じページで、URL の view だけが違う。
+ * 「探す」と「登録履歴」は同じページで、URL の view だけが違う。
  * 切り替えたときに入力内容が残らないよう、view ごとに作り直す。
  */
 export function ItemSearch() {
@@ -137,7 +137,7 @@ function ItemSearchView() {
   }
 
   const results = useMemo(() => searchItems(data, filters), [data, filters]);
-  // 「最近の登録」で一番上に出す、直近に登録したもの
+  // 「登録履歴」で一番上に出す、直近に登録したもの
   const latest = useMemo(() => searchItems(data, {}).slice(0, RECENT_COUNT), [data]);
   // 関連語辞書による検索（AIではない）。通常検索で見つかったものは除く
   const related = useMemo(
@@ -165,10 +165,10 @@ function ItemSearchView() {
 
   const isRecent = view === "recent";
   const searching = Boolean(filters.q) || activeCount > 0;
-  // 「最近の登録」では、検索・絞り込みをしたときだけ結果を出す
+  // 「登録履歴」では、検索・絞り込みをしたときだけ結果を出す
   const showResults = !isRecent || searching || data.items.length === 0;
 
-  const title = isRecent ? "最近の登録" : filters.category === "書類" && !filters.q ? "書類" : "探す・一覧";
+  const title = isRecent ? "登録履歴" : filters.category === "書類" && !filters.q ? "書類" : "探す・一覧";
 
   return (
     <div className="flex flex-col gap-5">

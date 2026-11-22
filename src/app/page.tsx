@@ -25,7 +25,7 @@ const MENU = [
   { href: "/items/new", label: "ものを登録", sub: "しまった場所を記録", Icon: PlusIcon, Art: OpenCarton, tone: "border-[#b9dcef] bg-[#eef6fb]", artClass: "h-[64px] sm:h-[80px]" },
   // 横長の画像なので、ほかより低めに表示する
   { href: "/places", label: "収納場所", sub: "場所ごとに見る", Icon: BoxIcon, Art: SteelShelf, tone: "border-[#b5e0cf] bg-[#eaf7f3]", artClass: "h-[56px] sm:h-[72px]" },
-  { href: "/items?view=recent", label: "最近の登録", sub: "新しい順に見る", Icon: ClockIcon, Art: RecentArt, tone: "border-[#c8d5ef] bg-[#eef3fb]" },
+  { href: "/items?view=recent", label: "登録履歴", sub: "新しい順に見る", Icon: ClockIcon, Art: RecentArt, tone: "border-[#c8d5ef] bg-[#eef3fb]" },
 ];
 
 function HomePageContent() {

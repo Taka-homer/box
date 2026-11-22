@@ -20,7 +20,7 @@ const DESKTOP_NAV = [
 ];
 
 /**
- * スマホの下部メニュー：探す・ものを登録・収納場所・最近の登録の4つ。
+ * スマホの下部メニュー：探す・ものを登録・収納場所・登録履歴の4つ。
  * ホームへは上部のロゴから戻れる。
  */
 const MOBILE_NAV = [
@@ -28,7 +28,7 @@ const MOBILE_NAV = [
     href: "/items",
     label: "探す",
     Icon: SearchIcon,
-    // 一覧（最近の登録を除く）と、ものの詳細・編集で選択表示にする
+    // 一覧（登録履歴を除く）と、ものの詳細・編集で選択表示にする
     match: (path: string, q: URLSearchParams) =>
       (path === "/items" && q.get("view") !== "recent") || (path.startsWith("/items/") && path !== "/items/new"),
   },
@@ -36,7 +36,7 @@ const MOBILE_NAV = [
   { href: "/places", label: "収納場所", Icon: BoxIcon, match: (path: string) => isActive(path, "/places") },
   {
     href: "/items?view=recent",
-    label: "最近の登録",
+    label: "登録履歴",
     Icon: ClockIcon,
     match: (path: string, q: URLSearchParams) => path === "/items" && q.get("view") === "recent",
   },

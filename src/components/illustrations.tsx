@@ -59,7 +59,7 @@ export function FileBox({ className = "" }: Props) {
   return <Art src="/images/home/file-box.png" className={`${SOFT_EDGE} ${className}`} />;
 }
 
-/** 「最近の登録」：収納ボックスと書類の写真 */
+/** 「登録履歴」：収納ボックスと書類の写真 */
 export function RecentArt({ className = "" }: Props) {
   return <Art src="/images/items/recent-files.webp" className={`${SOFT_EDGE} ${className}`} />;
 }
