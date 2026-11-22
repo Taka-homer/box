@@ -1,12 +1,13 @@
 "use client";
 
+import { FreshOnVisit } from "@/components/fresh-on-visit";
 import { useParams } from "next/navigation";
 import { useData } from "@/components/data-provider";
 import { StorageForm } from "@/components/storage-form";
 import { SpotArt, SteelShelf } from "@/components/illustrations";
 import { EmptyState, LinkButton, LoadError, Loading, PageHeader } from "@/components/ui";
 
-export default function EditStoragePage() {
+function EditStoragePageContent() {
   const { id } = useParams<{ id: string }>();
   const { status, data } = useData();
   const storage = data.storages.find((s) => s.id === id);
@@ -31,5 +32,14 @@ export default function EditStoragePage() {
           </EmptyState>
         ))}
     </div>
+  );
+}
+
+/** ページを離れたら入力内容を捨て、次に開いたときは空欄から始める */
+export default function EditStoragePage() {
+  return (
+    <FreshOnVisit>
+      <EditStoragePageContent />
+    </FreshOnVisit>
   );
 }

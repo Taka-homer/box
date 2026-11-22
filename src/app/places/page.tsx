@@ -1,5 +1,6 @@
 "use client";
 
+import { FreshOnVisit } from "@/components/fresh-on-visit";
 import Link from "next/link";
 import { useState } from "react";
 import { useData } from "@/components/data-provider";
@@ -8,7 +9,7 @@ import { ClosetArt, SpotArt } from "@/components/illustrations";
 import { PhotoView } from "@/components/photo";
 import { Badge, EmptyState, LinkButton, LoadError, Loading, PageHeader } from "@/components/ui";
 
-export default function PlacesPage() {
+function PlacesPageContent() {
   const { status, data } = useData();
   const [floorFilter, setFloorFilter] = useState<string>("");
 
@@ -162,5 +163,14 @@ export default function PlacesPage() {
         </>
       )}
     </div>
+  );
+}
+
+/** ページを離れたら入力内容を捨て、次に開いたときは空欄から始める */
+export default function PlacesPage() {
+  return (
+    <FreshOnVisit>
+      <PlacesPageContent />
+    </FreshOnVisit>
   );
 }

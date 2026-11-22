@@ -1,5 +1,6 @@
 "use client";
 
+import { FreshOnVisit } from "@/components/fresh-on-visit";
 import { useSearchParams } from "next/navigation";
 import { Suspense } from "react";
 import { useData } from "@/components/data-provider";
@@ -12,10 +13,11 @@ function NewStorage() {
   const params = useSearchParams();
   if (status === "loading") return <Loading />;
   if (status === "error") return <LoadError />;
-  return <StorageForm initialRoomId={params.get("room")} />;
+  const room = params.get("room");
+  return <StorageForm key={room ?? ""} initialRoomId={room} />;
 }
 
-export default function NewStoragePage() {
+function NewStoragePageContent() {
   return (
     <div className="mx-auto max-w-2xl">
       <PageHeader
@@ -28,5 +30,14 @@ export default function NewStoragePage() {
         <NewStorage />
       </Suspense>
     </div>
+  );
+}
+
+/** ページを離れたら入力内容を捨て、次に開いたときは空欄から始める */
+export default function NewStoragePage() {
+  return (
+    <FreshOnVisit>
+      <NewStoragePageContent />
+    </FreshOnVisit>
   );
 }

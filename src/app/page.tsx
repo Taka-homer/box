@@ -1,5 +1,6 @@
 "use client";
 
+import { FreshOnVisit } from "@/components/fresh-on-visit";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useMemo, useState } from "react";
@@ -27,7 +28,7 @@ const MENU = [
   { href: "/items?view=recent", label: "最近の登録", sub: "新しい順に見る", Icon: ClockIcon, Art: RecentArt, tone: "border-[#c8d5ef] bg-[#eef3fb]" },
 ];
 
-export default function HomePage() {
+function HomePageContent() {
   const { status, data, repo, refresh } = useData();
   const router = useRouter();
   const [q, setQ] = useState("");
@@ -253,5 +254,14 @@ export default function HomePage() {
         </section>
       )}
     </div>
+  );
+}
+
+/** ページを離れたら入力内容を捨て、次に開いたときは空欄から始める */
+export default function HomePage() {
+  return (
+    <FreshOnVisit>
+      <HomePageContent />
+    </FreshOnVisit>
   );
 }

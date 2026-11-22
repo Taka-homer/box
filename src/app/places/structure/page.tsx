@@ -1,5 +1,6 @@
 "use client";
 
+import { FreshOnVisit } from "@/components/fresh-on-visit";
 import { useRef, useState } from "react";
 import { useData } from "@/components/data-provider";
 import { ConfirmDialog, Modal } from "@/components/dialog";
@@ -10,7 +11,7 @@ import { errorMessage } from "@/lib/types";
 
 type Target = { kind: "floor" | "room"; id: string; name: string };
 
-export default function StructurePage() {
+function StructurePageContent() {
   const { status, data, repo, refresh } = useData();
   const [message, setMessage] = useState<{ kind: "success" | "error"; text: string } | null>(null);
   const [renaming, setRenaming] = useState<Target | null>(null);
@@ -270,5 +271,14 @@ function NameDialog({
         </Field>
       </form>
     </Modal>
+  );
+}
+
+/** ページを離れたら入力内容を捨て、次に開いたときは空欄から始める */
+export default function StructurePage() {
+  return (
+    <FreshOnVisit>
+      <StructurePageContent />
+    </FreshOnVisit>
   );
 }

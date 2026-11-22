@@ -1,5 +1,6 @@
 "use client";
 
+import { FreshOnVisit } from "@/components/fresh-on-visit";
 import { useSearchParams } from "next/navigation";
 import { Suspense } from "react";
 import { useData } from "@/components/data-provider";
@@ -12,10 +13,11 @@ function NewItem() {
   const params = useSearchParams();
   if (status === "loading") return <Loading />;
   if (status === "error") return <LoadError />;
-  return <ItemForm initialStorageId={params.get("storage")} />;
+  const storage = params.get("storage");
+  return <ItemForm key={storage ?? ""} initialStorageId={storage} />;
 }
 
-export default function NewItemPage() {
+function NewItemPageContent() {
   return (
     <div className="mx-auto max-w-2xl">
       <PageHeader
@@ -28,5 +30,14 @@ export default function NewItemPage() {
         <NewItem />
       </Suspense>
     </div>
+  );
+}
+
+/** ページを離れたら入力内容を捨て、次に開いたときは空欄から始める */
+export default function NewItemPage() {
+  return (
+    <FreshOnVisit>
+      <NewItemPageContent />
+    </FreshOnVisit>
   );
 }

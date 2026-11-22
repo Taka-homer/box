@@ -1,5 +1,6 @@
 "use client";
 
+import { FreshOnVisit } from "@/components/fresh-on-visit";
 import Link from "next/link";
 import { useState } from "react";
 import { useData } from "@/components/data-provider";
@@ -25,7 +26,7 @@ import { CATEGORIES, CATEGORY_MAX, DEFAULT_CATEGORY, errorMessage } from "@/lib/
 
 type Target = { name: string; count: number };
 
-export default function CategoriesPage() {
+function CategoriesPageContent() {
   const { status, data, repo, refresh } = useData();
   const [editing, setEditing] = useState<Target | null>(null);
   const [deleting, setDeleting] = useState<Target | null>(null);
@@ -239,5 +240,14 @@ function RenameDialog({
         )}
       </form>
     </Modal>
+  );
+}
+
+/** ページを離れたら入力内容を捨て、次に開いたときは空欄から始める */
+export default function CategoriesPage() {
+  return (
+    <FreshOnVisit>
+      <CategoriesPageContent />
+    </FreshOnVisit>
   );
 }

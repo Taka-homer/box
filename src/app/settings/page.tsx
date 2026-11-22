@@ -1,5 +1,6 @@
 "use client";
 
+import { FreshOnVisit } from "@/components/fresh-on-visit";
 import { useEffect, useRef, useState } from "react";
 import { useData } from "@/components/data-provider";
 import { ConfirmDialog } from "@/components/dialog";
@@ -17,7 +18,7 @@ import { errorMessage, type Snapshot } from "@/lib/types";
 
 type Msg = { kind: "success" | "error"; text: string } | null;
 
-export default function SettingsPage() {
+function SettingsPageContent() {
   const { data, repo, refresh, status, access } = useData();
   const cloud = access.mode === "cloud" && access.phase === "ready" ? access.membership : null;
   const [aiAvailable, setAiAvailable] = useState<boolean | null>(null);
@@ -333,5 +334,14 @@ export default function SettingsPage() {
         }
       />
     </div>
+  );
+}
+
+/** ページを離れたら入力内容を捨て、次に開いたときは空欄から始める */
+export default function SettingsPage() {
+  return (
+    <FreshOnVisit>
+      <SettingsPageContent />
+    </FreshOnVisit>
   );
 }

@@ -62,7 +62,16 @@ function toQuery(f: SearchFilters, view: string | null): string {
   return s ? `?${s}` : "";
 }
 
+/**
+ * 「探す」と「最近の登録」は同じページで、URL の view だけが違う。
+ * 切り替えたときに入力内容が残らないよう、view ごとに作り直す。
+ */
 export function ItemSearch() {
+  const view = useSearchParams().get("view") ?? "";
+  return <ItemSearchView key={view} />;
+}
+
+function ItemSearchView() {
   const { status, data } = useData();
   const router = useRouter();
   const pathname = usePathname();

@@ -1,5 +1,6 @@
 "use client";
 
+import { FreshOnVisit } from "@/components/fresh-on-visit";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { Suspense, useMemo, useState } from "react";
 import { useData } from "@/components/data-provider";
@@ -24,7 +25,7 @@ import {
 import { buildLookup, resolveItem } from "@/lib/search";
 import { errorMessage } from "@/lib/types";
 
-export default function StorageDetailPage() {
+function StorageDetailPageContent() {
   return (
     <Suspense fallback={<Loading />}>
       <StorageDetail />
@@ -248,5 +249,14 @@ function MoveAndDeleteDialog({
         />
       </form>
     </Modal>
+  );
+}
+
+/** ページを離れたら入力内容を捨て、次に開いたときは空欄から始める */
+export default function StorageDetailPage() {
+  return (
+    <FreshOnVisit>
+      <StorageDetailPageContent />
+    </FreshOnVisit>
   );
 }

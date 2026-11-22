@@ -1,5 +1,6 @@
 "use client";
 
+import { FreshOnVisit } from "@/components/fresh-on-visit";
 import Link from "next/link";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { Suspense, useMemo, useRef, useState } from "react";
@@ -39,7 +40,7 @@ import { buildLookup, resolveItem } from "@/lib/search";
 import { formatDateTime } from "@/lib/text";
 import { errorMessage } from "@/lib/types";
 
-export default function ItemDetailPage() {
+function ItemDetailPageContent() {
   return (
     <Suspense fallback={<Loading />}>
       <ItemDetail />
@@ -327,5 +328,14 @@ function MoveDialog({
         <p className="text-[13px] text-muted">変更すると、状態は「通常」に戻り、最終確認日時が今の時刻になります。</p>
       </form>
     </Modal>
+  );
+}
+
+/** ページを離れたら入力内容を捨て、次に開いたときは空欄から始める */
+export default function ItemDetailPage() {
+  return (
+    <FreshOnVisit>
+      <ItemDetailPageContent />
+    </FreshOnVisit>
   );
 }

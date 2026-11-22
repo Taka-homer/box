@@ -1,5 +1,6 @@
 "use client";
 
+import { FreshOnVisit } from "@/components/fresh-on-visit";
 import { useSearchParams } from "next/navigation";
 import { Suspense, useRef, useState } from "react";
 import { useData } from "@/components/data-provider";
@@ -24,7 +25,7 @@ import { errorMessage, type WordGroup } from "@/lib/types";
 
 const HELP = `同じ意味として扱う言葉を「、」で区切って${WORD_LIMITS.minWords}つ以上入力します。例：ボイラー室、機械室`;
 
-export default function MyWordsPage() {
+function MyWordsPageContent() {
   return (
     <div className="mx-auto flex max-w-2xl flex-col gap-6">
       <PageHeader
@@ -272,5 +273,14 @@ function EditDialog({
         {preview.length > 0 && <WordChips words={preview} />}
       </form>
     </Modal>
+  );
+}
+
+/** ページを離れたら入力内容を捨て、次に開いたときは空欄から始める */
+export default function MyWordsPage() {
+  return (
+    <FreshOnVisit>
+      <MyWordsPageContent />
+    </FreshOnVisit>
   );
 }
