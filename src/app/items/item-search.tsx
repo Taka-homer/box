@@ -193,7 +193,7 @@ function ItemSearchView() {
         <section aria-labelledby="latest-title" className="flex flex-col gap-2.5">
           <h2 id="latest-title" className="flex items-center gap-2 text-lg font-bold">
             <ClockIcon size={20} className="shrink-0 text-brand-strong" />
-            最近登録したもの（{latest.length}点）
+            登録履歴（{latest.length}点）
           </h2>
           <ul className="flex flex-col gap-2.5">
             {latest.map((v) => (
