@@ -114,7 +114,7 @@ function HomePageContent() {
             type="search"
             value={q}
             onChange={(e) => setQ(e.target.value)}
-            placeholder="名前や特徴で検索"
+            placeholder="例：保証書、マフラー"
             enterKeyHint="search"
             className="min-h-13 w-full rounded-full border border-brand bg-white py-3 pl-12 pr-4 text-base text-ink shadow-sm placeholder:text-[#8796a2] focus:outline-none focus-visible:outline-2"
           />
