@@ -202,7 +202,7 @@ function HomePageContent() {
           <div className="flex items-center justify-between gap-2">
             <h2 id="recent-title" className="flex items-center gap-2 text-lg">
               <ClockIcon size={20} className="text-brand-strong" />
-              最近登録したもの
+              登録履歴
             </h2>
             {data.items.length > 0 && (
               <Link
